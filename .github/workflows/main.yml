@@ -31,6 +31,19 @@ jobs:
 
 # TODO: Scan docker images for vulnerabilities
 
+# TODO: Get secrets form Azure KeyVault
+    - name: 'Get secrets from Azure KeyVault'
+      uses: theotow/keyvault-secret-azure@v1
+      with:
+        key-vault-name: kv-f8t-dev-westeu
+        config: |
+          {"APP_INSIGHTS_CONNSTR": "ConnectionString-Fott-AppInsights"}
+          {"DB_ADMIN_CONNSTR": "ConnectionString-Fott-Administration-Postgres"}
+          {"SERVICE_BUS_CONNSTR": "ConnectionString-Fott-ServiceBus"}
+    - run: echo "${{ env.APP_INSIGHTS_CONNSTR }}"
+    - run: echo "${{ env.DB_ADMIN_CONNSTR }}"
+    - run: echo "${{ env.SERVICE_BUS_CONNSTR }}"
+  
 # TODO: Deploy to AKS
     - name: 'Set the target AKS cluster'
       uses: Azure/aks-set-context@v1
