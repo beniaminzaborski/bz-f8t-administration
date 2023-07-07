@@ -29,29 +29,18 @@ jobs:
        docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }} -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.DOCKER_IMAGE_NAME }}:latest -f ./src/Bz.Fott.Administration.WebAPI/Dockerfile
        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.DOCKER_IMAGE_NAME }} --all-tags
 
-# TODO: Scan docker images for vulnerabilities
+    # TODO: Scan docker images for vulnerabilities
 
-# TODO: Get secrets form Azure KeyVault
+    # Get secrets form Azure KeyVault
     - uses: theotow/keyvault-secret-azure@v1
       with:
         key-vault-name: kv-f8t-dev-westeu
         config: |
           {"APP_INSIGHTS_CONNSTR": "ConnectionString-Fott-AppInsights"}
-    - run: echo "${{ env.APP_INSIGHTS_CONNSTR }}"
-    #- name: 'Get secrets from Azure KeyVault'
-    #  uses: theotow/keyvault-secret-azure@v1
-    #  with:
-    #    key-vault-name: kv-f8t-dev-westeu
-    #    config: |
-    #      {"APP_INSIGHTS_CONNSTR": "ConnectionString-Fott-AppInsights"}
-    #      #{"DB_ADMIN_CONNSTR": "ConnectionString-Fott-Administration-Postgres"}
-    #      #{"SERVICE_BUS_CONNSTR": "ConnectionString-Fott-ServiceBus"}
-
-    - run: echo "${{ env.APP_INSIGHTS_CONNSTR }}"
-    #- run: echo "${{ env.DB_ADMIN_CONNSTR }}"
-    #- run: echo "${{ env.SERVICE_BUS_CONNSTR }}"
-  
-# TODO: Deploy to AKS
+          {"DB_ADMIN_CONNSTR": "ConnectionString-Fott-Administration-Postgres"}
+          {"SERVICE_BUS_CONNSTR": "ConnectionString-Fott-ServiceBus"}
+    
+    # Deploy to AKS
     - name: 'Set the target AKS cluster'
       uses: Azure/aks-set-context@v1
       with:
@@ -59,6 +48,7 @@ jobs:
         cluster-name: '${{ vars.CLUSTER_NAME }}'
         resource-group: '${{ vars.RESOURCE_GROUP }}'
 
+    # Get secrets from Azure KeyVault to environments
     - name: 'Create k8s secrets'
       uses: Azure/k8s-create-secret@v1
       with:
@@ -66,6 +56,8 @@ jobs:
         container-registry-username: ${{ secrets.REGISTRY_USERNAME }}
         container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
         secret-name: k8s-secret
+
+    # TODO: Pass secrets from environments to k8s cluster
 
     - name: 'Deploy to AKS cluster'
       uses: Azure/k8s-deploy@v1
