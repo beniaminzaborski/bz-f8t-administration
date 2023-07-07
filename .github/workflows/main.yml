@@ -50,7 +50,7 @@ jobs:
     - name: 'Deploy to AKS cluster'
       uses: Azure/k8s-deploy@v1
       with:
-        manifest: |
+        manifests: |
           k8s/bz-fott-admin.yaml
         images: |
           ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
