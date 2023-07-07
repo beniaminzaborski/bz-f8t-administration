@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bz-f8t-admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bz-f8t-admin
+  template:
+    metadata:
+      labels:
+        app: bz-f8t-admin
+    spec:
+      containers:
+      - name: bz-f8t-admin
+        image: crf8tdevwesteu.azurecr.io/bz-f8t-admin:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        - name: ConnectionStrings__Postgres
+          value: "Server=psql-f8t-dev-westeu.postgres.database.azure.com;Database=fott_administration;Port=5432;User Id=postgres@psql-f8t-dev-westeu;Password=S3cret123!;Ssl Mode=Allow;"
+        - name: ConnectionStrings__AzureServiceBus
+          value: "Endpoint=sb://sb-f8t-dev-westeu.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=p5SP7/vjHcLFi8wsAP/gbhm0EoLqqsYOs+ASbDW/LAQ="
+        - name: ConnectionStrings__ApplicationInsights
+          value: "InstrumentationKey=c954ba4e-a6c1-4b14-9b00-14524c7c46bb;IngestionEndpoint=https://westeurope-4.in.applicationinsights.azure.com/;LiveEndpoint=https://westeurope.livediagnostics.monitor.azure.com/"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: "app"
+                    operator: In
+                    values:
+                    - bz-f8t-admin
+              topologyKey: "kubernetes.io/hostname"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bz-f8t-admin-svc
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  selector:
+    app: bz-f8t-admin

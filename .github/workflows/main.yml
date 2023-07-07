@@ -28,3 +28,31 @@ jobs:
     - run: |
        docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }} -f ./src/Bz.Fott.Administration.WebAPI/Dockerfile
        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+
+# TODO: Scan docker images for vulnerabilities
+
+# TODO: Deploy to AKS
+    - name: 'Set the target AKS cluster'
+      uses: Azure/aks-set-context@v1
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
+        cluster-name: '${{ vars.CLUSTER_NAME }}'
+        resource-group: '${{ vars.RESOURCE_GROUP }}'
+
+    - name: 'Create k8s secrets'
+      uses: Azure/k8s-create-secret@v1
+      with:
+        container-registry-url: '${{ secrets.REGISTRY_LOGIN_SERVER }}'
+        container-registry-username: ${{ secrets.REGISTRY_USERNAME }}
+        container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+        secret-name: k8s-secret
+
+    - name: 'Deploy to AKS cluster'
+      uses: Azure/k8s-deploy@v1
+      with:
+        manifest: |
+          k8s/bz-fott-admin.yaml
+        images: |
+          ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+        imagepullsecrets: |
+          k8s-secret
