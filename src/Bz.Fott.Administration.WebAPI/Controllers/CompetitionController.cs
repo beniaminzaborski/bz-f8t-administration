@@ -81,4 +81,10 @@ public class CompetitionController : ControllerBase
         await _competitionService.RemoveCheckpoint(id, checkpointId);
         return NoContent();
     }
+
+    [HttpGet("ping")]
+    public IActionResult GetPing()
+    {
+        return Ok("pong");
+    }
 }
