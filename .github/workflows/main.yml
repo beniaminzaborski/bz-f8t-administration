@@ -38,11 +38,12 @@ jobs:
         key-vault-name: kv-f8t-dev-westeu
         config: |
           {"APP_INSIGHTS_CONNSTR": "ConnectionString-Fott-AppInsights"}
-          {"DB_ADMIN_CONNSTR": "ConnectionString-Fott-Administration-Postgres"}
-          {"SERVICE_BUS_CONNSTR": "ConnectionString-Fott-ServiceBus"}
+          #{"DB_ADMIN_CONNSTR": "ConnectionString-Fott-Administration-Postgres"}
+          #{"SERVICE_BUS_CONNSTR": "ConnectionString-Fott-ServiceBus"}
+
     - run: echo "${{ env.APP_INSIGHTS_CONNSTR }}"
-    - run: echo "${{ env.DB_ADMIN_CONNSTR }}"
-    - run: echo "${{ env.SERVICE_BUS_CONNSTR }}"
+    #- run: echo "${{ env.DB_ADMIN_CONNSTR }}"
+    #- run: echo "${{ env.SERVICE_BUS_CONNSTR }}"
   
 # TODO: Deploy to AKS
     - name: 'Set the target AKS cluster'
