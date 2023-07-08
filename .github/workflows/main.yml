@@ -51,6 +51,9 @@ jobs:
         config: |
           {"SERVICE_BUS_CONNSTR": "ConnectionString-Fott-ServiceBus"}
 
+    - name: 'Prepare k8s deployment'
+      run: envsubst < k8s/bz-fott-admin.yaml > k8s/bz-fott-admin-prepared.yaml
+
     # Deploy to AKS
     - name: 'Set the target AKS cluster'
       uses: Azure/aks-set-context@v1
@@ -74,7 +77,7 @@ jobs:
       uses: Azure/k8s-deploy@v1
       with:
         manifests: |
-          k8s/bz-fott-admin.yaml
+          k8s/bz-fott-admin-prepared.yaml
         images: |
           ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
         imagepullsecrets: |
