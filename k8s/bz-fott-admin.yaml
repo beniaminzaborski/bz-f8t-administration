@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: bz-f8t-admin
-        image: crf8tdevwesteu.azurecr.io/bz-f8t-admin
+        image: crf8tdevwesteu.azurecr.io/bz-f8t-admin:latest
         ports:
         - containerPort: 80
         env:
