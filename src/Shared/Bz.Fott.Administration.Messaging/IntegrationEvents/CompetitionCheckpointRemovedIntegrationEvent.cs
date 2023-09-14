@@ -1,4 +1,4 @@
-﻿namespace Bz.Fott.Administration.Application.Competitions;
+﻿namespace Bz.Fott.Administration.Messaging.IntegrationEvents;
 
 public sealed record CompetitionCheckpointRemovedIntegrationEvent(
     Guid CompetitionId,

@@ -1,6 +1,7 @@
-﻿using FluentValidation;
+﻿using Bz.Fott.Administration.Application.Competitions.Dtos;
+using FluentValidation;
 
-namespace Bz.Fott.Administration.Application.Competitions;
+namespace Bz.Fott.Administration.Application.Competitions.Validators;
 
 public class CreateCompetitionDtoValidator : AbstractValidator<CreateCompetitionDto>
 {

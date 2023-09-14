@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Bz.Fott.Administration.Domain\Bz.Fott.Administration.Domain.csproj" />
+    <ProjectReference Include="..\Shared\Bz.Fott.Administration.Messaging\Bz.Fott.Administration.Messaging.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
-﻿using Bz.Fott.Administration.Domain.ManagingCompetition;
+﻿using Bz.Fott.Administration.Messaging.Dtos;
 
-namespace Bz.Fott.Administration.Application.Competitions;
+namespace Bz.Fott.Administration.Messaging.IntegrationEvents;
 
 public sealed record CompetitionOpenedForRegistrationIntegrationEvent(
     Guid Id,

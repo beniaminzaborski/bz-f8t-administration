@@ -1,9 +1,10 @@
 ﻿using Bz.Fott.Administration.Domain.ManagingCompetition;
+using Bz.Fott.Administration.Messaging.IntegrationEvents;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Bz.Fott.Administration.Application.Competitions;
+namespace Bz.Fott.Administration.Application.Competitions.DomainEventHandlers;
 
 public class CompetitionCheckpointAddedHandler : INotificationHandler<CompetitionCheckpointAdded>
 {
@@ -15,7 +16,7 @@ public class CompetitionCheckpointAddedHandler : INotificationHandler<Competitio
         IPublishEndpoint publishEndpoint)
     {
         _logger = logger;
-        _publishEndpoint = publishEndpoint; 
+        _publishEndpoint = publishEndpoint;
     }
 
     public async Task Handle(CompetitionCheckpointAdded domainEvent, CancellationToken cancellationToken)

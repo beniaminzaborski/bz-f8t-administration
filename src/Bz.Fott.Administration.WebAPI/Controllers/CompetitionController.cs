@@ -1,4 +1,5 @@
-﻿using Bz.Fott.Administration.Application.Competitions;
+﻿using Bz.Fott.Administration.Application.Competitions.Dtos;
+using Bz.Fott.Administration.Application.Competitions.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 

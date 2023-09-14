@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using Bz.Fott.Administration.Messaging.Dtos;
 using Bz.Fott.Administration.Domain.ManagingCompetition;
+using Bz.Fott.Administration.Messaging.IntegrationEvents;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Bz.Fott.Administration.Application.Competitions;
+namespace Bz.Fott.Administration.Application.Competitions.DomainEventHandlers;
 
 public class CompetitionOpenedForRegistrationHandler : INotificationHandler<CompetitionOpenedForRegistration>
 {
