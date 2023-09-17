@@ -21,14 +21,14 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
 
-    - run: dotnet pack "${{ env.WORKING_DIRECTORY }}/src/Shared/Bz.Fott.Administration.Messaging/Bz.Fott.Administration.Messaging.csproj" --configuration Release --output ${{ env.NUGET_DIRECTORY }}
+    - run: dotnet pack src/Shared/Bz.Fott.Administration.Messaging/Bz.Fott.Administration.Messaging.csproj --configuration Release --output ${{ env.NUGET_DIRECTORY }}
     
     - uses: actions/upload-artifact@v3
       with:
         name: nuget
         if-no-files-found: error
         retention-days: 3
-        path: ${{ env.NuGetDirectory }}/*.nupkg
+        path: ${{ env.NUGET_DIRECTORY }}/*.nupkg
 
   # run_test:
   #   runs-on: ubuntu-latest
