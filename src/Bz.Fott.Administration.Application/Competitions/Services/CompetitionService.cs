@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
 using Bz.Fott.Administration.Application.Common;
 using Bz.Fott.Administration.Application.Common.Exceptions;
-using Bz.Fott.Administration.Application.Competitions.Dtos;
 using Bz.Fott.Administration.Domain.ManagingCompetition;
 using Bz.Fott.Administration.Domain.Utils;
 using FluentValidation;
 
-namespace Bz.Fott.Administration.Application.Competitions.Services;
+namespace Bz.Fott.Administration.Application.Competitions;
 
 internal class CompetitionService : ICompetitionService
 {

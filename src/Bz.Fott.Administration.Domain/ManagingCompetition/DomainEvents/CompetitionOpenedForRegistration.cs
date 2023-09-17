@@ -9,4 +9,5 @@ public sealed record CompetitionOpenedForRegistration(
      DateTime StartAt,
      int MaxCompetitors,
      IEnumerable<Checkpoint> Checkpoints)
-    : IDomainEvent { }
+    : IDomainEvent
+{ }

@@ -1,4 +1,4 @@
-﻿namespace Bz.Fott.Administration.Messaging.Dtos;
+﻿namespace Bz.Fott.Administration.Messaging;
 
 public record CompetitionPlaceDto(
     string City,

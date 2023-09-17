@@ -4,4 +4,5 @@ namespace Bz.Fott.Administration.Domain.ManagingCompetition;
 
 public sealed record CompetitionRegistrationCompleted(
     CompetitionId Id)
-    : IDomainEvent { }
+    : IDomainEvent
+{ }

@@ -1,7 +1,6 @@
 ﻿using Bz.Fott.Administration.Application.Common;
-using Bz.Fott.Administration.Application.Competitions.Dtos;
 
-namespace Bz.Fott.Administration.Application.Competitions.Services;
+namespace Bz.Fott.Administration.Application.Competitions;
 
 public interface ICompetitionService : IApplicationService
 {

@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
-using Bz.Fott.Administration.Messaging.Dtos;
-using Bz.Fott.Administration.Domain.ManagingCompetition;
-using Bz.Fott.Administration.Messaging.IntegrationEvents;
+using Bz.Fott.Administration.Messaging;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Bz.Fott.Administration.Domain.ManagingCompetition;
 
-namespace Bz.Fott.Administration.Application.Competitions.DomainEventHandlers;
+namespace Bz.Fott.Administration.Application.Competitions;
 
 public class CompetitionOpenedForRegistrationHandler : INotificationHandler<CompetitionOpenedForRegistration>
 {
@@ -30,10 +29,10 @@ public class CompetitionOpenedForRegistrationHandler : INotificationHandler<Comp
 
         await _publishEndpoint.Publish(new CompetitionOpenedForRegistrationIntegrationEvent(
             domainEvent.Id.Value,
-            _mapper.Map<CompetitionPlaceDto>(domainEvent.Place),
-            _mapper.Map<DistanceDto>(domainEvent.Distance),
+            _mapper.Map<Messaging.CompetitionPlaceDto>(domainEvent.Place),
+            _mapper.Map<Messaging.DistanceDto>(domainEvent.Distance),
             domainEvent.StartAt,
             domainEvent.MaxCompetitors,
-            _mapper.Map<IEnumerable<Checkpoint>, IEnumerable<CheckpointDto>>(domainEvent.Checkpoints)));
+            _mapper.Map<IEnumerable<Checkpoint>, IEnumerable<Messaging.CheckpointDto>>(domainEvent.Checkpoints)));
     }
 }

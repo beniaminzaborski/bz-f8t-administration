@@ -49,7 +49,7 @@ public class Competition : Entity<CompetitionId>, IAggregateRoot
     public void RemoveCheckpoint(CheckpointId checkpointId)
     {
         var checkpoint = _checkpoints.FirstOrDefault(c => c.Id.Equals(checkpointId));
-        if(checkpoint is null) throw new CheckpointNotExistsException();
+        if (checkpoint is null) throw new CheckpointNotExistsException();
         _checkpoints.Remove(checkpoint);
         QueueDomainEvent(new CompetitionCheckpointRemoved(Id, checkpoint.Id, checkpoint.TrackPoint));
     }
@@ -62,7 +62,7 @@ public class Competition : Entity<CompetitionId>, IAggregateRoot
         QueueDomainEvent(new CompetitionOpenedForRegistration(Id, Place, Distance, StartAt, MaxCompetitors, Checkpoints));
     }
 
-    public void CompleteRegistration() 
+    public void CompleteRegistration()
     {
         if (Status != CompetitionStatus.OpenedForRegistration) throw new CannotCompleteRegistrationException();
 
@@ -75,7 +75,7 @@ public class Competition : Entity<CompetitionId>, IAggregateRoot
         if ((Status == CompetitionStatus.Draft
             || Status == CompetitionStatus.OpenedForRegistration)
             && maxCompetitors > MaxCompetitors)
-        { 
+        {
             MaxCompetitors = maxCompetitors;
             QueueDomainEvent(new CompetitionMaxCompetitorsIncreased(Id, MaxCompetitors));
         }

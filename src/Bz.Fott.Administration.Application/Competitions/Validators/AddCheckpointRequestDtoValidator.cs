@@ -1,7 +1,6 @@
-﻿using Bz.Fott.Administration.Application.Competitions.Dtos;
-using FluentValidation;
+﻿using FluentValidation;
 
-namespace Bz.Fott.Administration.Application.Competitions.Validators;
+namespace Bz.Fott.Administration.Application.Competitions;
 
 public class AddCheckpointRequestDtoValidator : AbstractValidator<AddCheckpointRequestDto>
 {

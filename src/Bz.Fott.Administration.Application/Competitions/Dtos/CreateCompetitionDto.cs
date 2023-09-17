@@ -1,4 +1,4 @@
-﻿namespace Bz.Fott.Administration.Application.Competitions.Dtos;
+﻿namespace Bz.Fott.Administration.Application.Competitions;
 
 public record CreateCompetitionDto(
     DateTime StartAt,

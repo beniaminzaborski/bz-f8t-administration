@@ -5,4 +5,5 @@ namespace Bz.Fott.Administration.Domain.ManagingCompetition;
 public sealed record CompetitionCheckpointRemoved(
     CompetitionId CompetitionId,
     CheckpointId CheckpointId,
-    Distance TrackPoint) : IDomainEvent { }
+    Distance TrackPoint) : IDomainEvent
+{ }

@@ -1,10 +1,10 @@
 ﻿using Bz.Fott.Administration.Domain.ManagingCompetition;
-using Bz.Fott.Administration.Messaging.IntegrationEvents;
+using Bz.Fott.Administration.Messaging;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Bz.Fott.Administration.Application.Competitions.DomainEventHandlers;
+namespace Bz.Fott.Administration.Application.Competitions;
 
 public class CompetitionCheckpointAddedHandler : INotificationHandler<CompetitionCheckpointAdded>
 {
