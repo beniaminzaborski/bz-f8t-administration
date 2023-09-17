@@ -53,7 +53,7 @@ jobs:
 
       - name: Publish NuGet package
         run: |
-          dotnet nuget push "${{ env.NUGET_DIRECTORY }}/Bz.Fott.Administration.Messaging.*.nupkg" --api-key "${{ secrets.NUGET_APIKEY }}" --source ${{ env.NUGET_FEED_URL }} --skip-duplicate
+          dotnet nuget push "${{ env.NUGET_DIRECTORY }}/Bz.Fott.Administration.Messaging.*.nupkg" --api-key "${{ env.NUGET_TOKEN }}" --source ${{ env.NUGET_FEED_URL }} --skip-duplicate
           # foreach($file in (Get-ChildItem "${{ env.NUGET_DIRECTORY }}" -Recurse -Include *.nupkg)) {
           #     dotnet nuget push $file --api-key "${{ secrets.NUGET_APIKEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
           # }
