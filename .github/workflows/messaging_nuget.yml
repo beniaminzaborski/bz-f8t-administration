@@ -4,7 +4,7 @@ on:
   workflow_dispatch: {}
   push:
     paths:
-    - "${{ env.WORKING_DIRECTORY }}/src/Shared/Bz.Fott.Administration.Messaging/**"
+    - 'src/Shared/Bz.Fott.Administration.Messaging/**'
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
