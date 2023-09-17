@@ -2,7 +2,9 @@ name: Build a docker image and push to the container registry
 
 on:
   workflow_dispatch: {}
-  push: {}
+  push:
+    paths-ignore:
+    - 'src/Shared/**'
 
 env:
   DOCKER_IMAGE_NAME: bz-f8t-admin
