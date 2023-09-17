@@ -7,7 +7,7 @@ on:
     - 'src/Shared/Bz.Fott.Administration.Messaging/**'
 
 env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
   NUGET_DIRECTORY: ${{ github.workspace}}/nuget
   NUGET_FEED_URL: ${{ vars.NUGET_FEED_URL }}
 
@@ -41,6 +41,7 @@ jobs:
 
   deploy_nuget:
     runs-on: ubuntu-latest
+    needs: [ create_nuget ]
     steps:
       - uses: actions/download-artifact@v3
         with:
