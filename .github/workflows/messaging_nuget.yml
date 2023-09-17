@@ -1,10 +1,10 @@
-name: Build and publish Bz.Fott.Administration.Messaging NuGet package into GitHub feeds
+name: Build and publish Bz.F8t.Administration.Messaging NuGet package into GitHub feeds
 
 on:
   workflow_dispatch: {}
   push:
     paths:
-    - 'src/Shared/Bz.Fott.Administration.Messaging/**'
+    - 'src/Shared/Bz.F8t.Administration.Messaging/**'
 
 env:
   NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
@@ -21,7 +21,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
 
-    - run: dotnet pack src/Shared/Bz.Fott.Administration.Messaging/Bz.Fott.Administration.Messaging.csproj --configuration Release --output ${{ env.NUGET_DIRECTORY }}
+    - run: dotnet pack src/Shared/Bz.F8t.Administration.Messaging/Bz.F8t.Administration.Messaging.csproj --configuration Release --output ${{ env.NUGET_DIRECTORY }}
     
     - uses: actions/upload-artifact@v3
       with:
@@ -53,7 +53,5 @@ jobs:
 
       - name: Publish NuGet package
         run: |
-          dotnet nuget push "${{ env.NUGET_DIRECTORY }}/Bz.Fott.Administration.Messaging.*.nupkg" --api-key "${{ env.NUGET_TOKEN }}" --source ${{ env.NUGET_FEED_URL }} --skip-duplicate
-          # foreach($file in (Get-ChildItem "${{ env.NUGET_DIRECTORY }}" -Recurse -Include *.nupkg)) {
-          #     dotnet nuget push $file --api-key "${{ secrets.NUGET_APIKEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
-          # }
+          dotnet nuget push "${{ env.NUGET_DIRECTORY }}/Bz.F8t.Administration.Messaging.*.nupkg" --api-key "${{ env.NUGET_TOKEN }}" --source ${{ env.NUGET_FEED_URL }} --skip-duplicate
+

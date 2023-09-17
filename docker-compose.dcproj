@@ -6,7 +6,7 @@
     <ProjectGuid>aeac2da5-169e-49d5-9382-d7d63efc17f5</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
-    <DockerServiceName>bz.fott.administration.webapi</DockerServiceName>
+    <DockerServiceName>bz.f8t.administration.webapi</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include=".env" />
