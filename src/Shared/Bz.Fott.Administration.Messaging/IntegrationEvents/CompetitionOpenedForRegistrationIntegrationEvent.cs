@@ -8,4 +8,5 @@ public sealed record CompetitionOpenedForRegistrationIntegrationEvent(
     DistanceDto Distance,
     DateTime StartAt,
     int MaxCompetitors,
-    IEnumerable<CheckpointDto> Checkpoints) { }
+    IEnumerable<CheckpointDto> Checkpoints) 
+{ }
