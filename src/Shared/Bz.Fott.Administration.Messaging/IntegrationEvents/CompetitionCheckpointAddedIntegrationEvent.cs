@@ -4,5 +4,4 @@ public sealed record CompetitionCheckpointAddedIntegrationEvent(
     Guid CompetitionId,
     Guid CheckpointId,
     decimal TrackPointDistance,
-    string TrackPointUnit)
-{ }
+    string TrackPointUnit) { }

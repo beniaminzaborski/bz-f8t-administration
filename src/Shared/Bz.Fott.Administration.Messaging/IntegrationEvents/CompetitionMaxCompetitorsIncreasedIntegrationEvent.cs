@@ -2,5 +2,4 @@
 
 public sealed record CompetitionMaxCompetitorsIncreasedIntegrationEvent(
     Guid Id, 
-    int MaxCompetitors) 
-{ }
+    int MaxCompetitors) { }
