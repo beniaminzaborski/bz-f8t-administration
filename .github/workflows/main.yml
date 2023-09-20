@@ -5,6 +5,8 @@ on:
   push:
     paths-ignore:
     - 'src/Shared/**'
+    - 'README.ME'
+    - 'doc/**'
 
 env:
   DOCKER_IMAGE_NAME: bz-f8t-admin
