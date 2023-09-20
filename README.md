@@ -5,6 +5,7 @@
 * [General info](#general-info)
 * [Technologies](#technologies)
 * [Setup](#setup)
+* [F8T repositories](#f8t-repositories)
 
 ## General info
 F8T is version of Feet On The Tarmac (FOTT) project for K8s. Originally FOTT project was built on Azure PaaS approach. 
@@ -48,5 +49,6 @@ To deploy this project from GitHub Actions:
 
 * Run GitHub workflow named 'Build a docker image and push to the container registry' to deploy service into AKS
 
-## Repositories of related services
+## F8T repositories
 * Infrastructure: [github.com/beniaminzaborski/bz-f8t-infrastructure](https://github.com/beniaminzaborski/bz-f8t-infrastructure)
+* Administration (this one): [github.com/beniaminzaborski/bz-f8t-administration](https://github.com/beniaminzaborski/bz-f8t-administration)
