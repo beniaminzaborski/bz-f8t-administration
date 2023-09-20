@@ -1,4 +1,4 @@
-# F*T (Feet On The Tarmac) - Administration
+# F8T (Feet On The Tarmac) - Administration
 ![Project logo](./doc/f8t-logo.png)
 
 ## Table of contents
