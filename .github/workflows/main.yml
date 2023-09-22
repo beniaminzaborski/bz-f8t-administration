@@ -15,11 +15,6 @@ env:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    env:
-      DOCKER_IMAGE_NAME: bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}
-      KEYVAULT_NAME: kv-${{ env.PROJECT_NAME }}-${{ vars.ENVIRONMENT }}-${{ vars.AZURE_REGION_SHORT_NAME }}
-      RESOURCE_GROUP: rg-${{ env.PROJECT_NAME }}-${{ vars.ENVIRONMENT }}-${{ vars.AZURE_REGION_SHORT_NAME }}
-      CLUSTER_NAME: aks-${{ env.PROJECT_NAME }}-${{ vars.ENVIRONMENT }}-${{ vars.AZURE_REGION_SHORT_NAME }}
     steps:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@main
@@ -36,8 +31,8 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
     - run: |
-       docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }} -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.DOCKER_IMAGE_NAME }}:latest -f ./src/Bz.F8t.Administration.WebAPI/Dockerfile
-       docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.DOCKER_IMAGE_NAME }} --all-tags
+       docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}:${{ github.sha }} -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}:latest -f ./src/Bz.F8t.Administration.WebAPI/Dockerfile
+       docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }} --all-tags
 
     # TODO: Scan docker images for vulnerabilities
 
@@ -45,19 +40,19 @@ jobs:
     - name: 'Get AppInsights connection string from Azure KeyVault'
       uses: theotow/keyvault-secret-azure@v1
       with:
-        key-vault-name: ${{ env.KEYVAULT_NAME }}
+        key-vault-name: kv-${{ env.PROJECT_NAME }}-${{ vars.ENVIRONMENT }}-${{ vars.AZURE_REGION_SHORT_NAME }}
         config: |
           {"APP_INSIGHTS_CONNSTR": "ConnectionString-Fott-AppInsights"}
     - name: 'Get database connection string from Azure KeyVault'
       uses: theotow/keyvault-secret-azure@v1
       with:
-        key-vault-name: ${{ env.KEYVAULT_NAME }}
+        key-vault-name: kv-${{ env.PROJECT_NAME }}-${{ vars.ENVIRONMENT }}-${{ vars.AZURE_REGION_SHORT_NAME }}
         config: |
           {"DB_ADMIN_CONNSTR": "ConnectionString-Fott-Administration-Postgres"}
     - name: 'Get ServiceBus connection string from Azure KeyVault'
       uses: theotow/keyvault-secret-azure@v1
       with:
-        key-vault-name: ${{ env.KEYVAULT_NAME }}
+        key-vault-name: kv-${{ env.PROJECT_NAME }}-${{ vars.ENVIRONMENT }}-${{ vars.AZURE_REGION_SHORT_NAME }}
         config: |
           {"SERVICE_BUS_CONNSTR": "ConnectionString-Fott-ServiceBus"}
 
@@ -69,8 +64,8 @@ jobs:
       uses: Azure/aks-set-context@v1
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
-        cluster-name: '${{ env.CLUSTER_NAME }}'
-        resource-group: '${{ env.RESOURCE_GROUP }}'
+        cluster-name: 'aks-${{ env.PROJECT_NAME }}-${{ vars.ENVIRONMENT }}-${{ vars.AZURE_REGION_SHORT_NAME }}'
+        resource-group: 'rg-${{ env.PROJECT_NAME }}-${{ vars.ENVIRONMENT }}-${{ vars.AZURE_REGION_SHORT_NAME }}'
 
     # Get secrets from Azure KeyVault to environments
     - name: 'Create k8s secrets'
@@ -89,6 +84,6 @@ jobs:
         manifests: |
           k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-prepared.yaml
         images: |
-          ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+          ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}:${{ github.sha }}
         imagepullsecrets: |
           k8s-secret
