@@ -11,14 +11,15 @@ on:
 env:
   PROJECT_NAME: f8t
   SERVICE_NAME: admin
-  DOCKER_IMAGE_NAME: bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}
-  KEYVAULT_NAME: kv-${{ env.PROJECT_NAME }}-${{ vars.ENVIRONMENT }}-${{ vars.AZURE_REGION_SHORT_NAME }}
-  RESOURCE_GROUP: rg-${{ env.PROJECT_NAME }}-${{ vars.ENVIRONMENT }}-${{ vars.AZURE_REGION_SHORT_NAME }}
-  CLUSTER_NAME: aks-${{ env.PROJECT_NAME }}-${{ vars.ENVIRONMENT }}-${{ vars.AZURE_REGION_SHORT_NAME }}
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      DOCKER_IMAGE_NAME: bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}
+      KEYVAULT_NAME: kv-${{ env.PROJECT_NAME }}-${{ vars.ENVIRONMENT }}-${{ vars.AZURE_REGION_SHORT_NAME }}
+      RESOURCE_GROUP: rg-${{ env.PROJECT_NAME }}-${{ vars.ENVIRONMENT }}-${{ vars.AZURE_REGION_SHORT_NAME }}
+      CLUSTER_NAME: aks-${{ env.PROJECT_NAME }}-${{ vars.ENVIRONMENT }}-${{ vars.AZURE_REGION_SHORT_NAME }}
     steps:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@main
