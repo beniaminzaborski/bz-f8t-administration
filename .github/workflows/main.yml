@@ -26,7 +26,7 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: Test
-      run: dotnet test ./Bz.Fott.Administration.sln
+      run: dotnet test "./Bz.Fott.Administration.sln"
 
     - name: 'Login via Azure CLI'
       uses: azure/login@v1
