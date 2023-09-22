@@ -11,6 +11,7 @@ on:
 env:
   PROJECT_NAME: f8t
   SERVICE_NAME: admin
+  DOTNET_VERSION: 7.0.x
 
 jobs:
   build-and-deploy:
@@ -18,6 +19,14 @@ jobs:
     steps:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@main
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Test
+      run: dotnet test Bz.Fott.Administration.sln
 
     - name: 'Login via Azure CLI'
       uses: azure/login@v1
