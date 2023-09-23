@@ -29,10 +29,11 @@ public class CompetitionOpenedForRegistrationHandler : INotificationHandler<Comp
 
         await _publishEndpoint.Publish(new CompetitionOpenedForRegistrationIntegrationEvent(
             domainEvent.Id.Value,
-            _mapper.Map<Messaging.CompetitionPlaceDto>(domainEvent.Place),
-            _mapper.Map<Messaging.DistanceDto>(domainEvent.Distance),
+            new(domainEvent.Place.City, domainEvent.Place.Localization.Latitude, domainEvent.Place.Localization.Longitude),
+            new(domainEvent.Distance.Amount, domainEvent.Distance.Unit.ToString()),
             domainEvent.StartAt,
             domainEvent.MaxCompetitors,
-            _mapper.Map<IEnumerable<Checkpoint>, IEnumerable<Messaging.CheckpointDto>>(domainEvent.Checkpoints)));
+            domainEvent.Checkpoints.Select(c => new Messaging.CheckpointDto(c.Id.Value, c.TrackPoint.Amount, c.TrackPoint.Unit.ToString())))
+        );
     }
 }
