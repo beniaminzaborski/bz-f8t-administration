@@ -7,6 +7,7 @@ on:
     - 'src/Shared/**'
     - 'README.ME'
     - 'doc/**'
+    - 'test/**'
 
 env:
   PROJECT_NAME: f8t
