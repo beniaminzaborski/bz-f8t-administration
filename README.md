@@ -45,7 +45,7 @@ To deploy this project from GitHub Actions:
 
 * Define GitHub Actions variable named NUGET_FEED_URL and put there the URL of your GitHub Packages (https://nuget.pkg.github.com/<your account name>/index.json)
 
-* Define GitHub Actions variable named AZURE_REGION_SHORT_NAME and put there a short name of your Azure region. for example 'westeu' for westeurope
+* Define GitHub Actions variable named AZURE_REGION_SHORT_NAME and put there a short name of your Azure region, for example 'westeu' for westeurope
 
 * Define GitHub Actions variable named ENVIRONMENT and put there the name of your environment: dev, qa, stg, prd
 
