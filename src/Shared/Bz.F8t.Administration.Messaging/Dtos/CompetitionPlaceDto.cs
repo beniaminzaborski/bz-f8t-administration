@@ -1,6 +1,6 @@
 ﻿namespace Bz.F8t.Administration.Messaging;
 
-public record CompetitionPlaceDto(
+public sealed record CompetitionPlaceDto(
     string City,
     decimal Latitude,
     decimal Longitute) { }

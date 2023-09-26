@@ -1,6 +1,6 @@
 ﻿namespace Bz.F8t.Administration.Messaging;
 
-public record CheckpointDto(
+public sealed record CheckpointDto(
     Guid Id,
     decimal TrackPointAmount,
     string TrackPointUnit) { }

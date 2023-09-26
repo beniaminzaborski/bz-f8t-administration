@@ -1,5 +1,5 @@
 ﻿namespace Bz.F8t.Administration.Messaging;
 
-public record DistanceDto(
+public sealed record DistanceDto(
     decimal Amount,
     string Unit) { }
