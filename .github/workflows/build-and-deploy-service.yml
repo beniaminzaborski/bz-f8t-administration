@@ -9,19 +9,13 @@ on:
     - 'doc/**'
     - 'test/**'
 
-env:
-  PROJECT_NAME: f8t
-  SERVICE_NAME: admin
-  DOTNET_VERSION: 7.0.x
-
 jobs:
   build-and-deploy:
     uses: ./.github/workflows/reusable-jobs.yml
     with:
       ENVIRONMENT_TYPE: dev
-      PROJECT_NAME: ${{ env.PROJECT_NAME }}
-      SERVICE_NAME: ${{ env.SERVICE_NAME }}
-      DOTNET_VERSION: ${{ env.DOTNET_VERSION }}
+      PROJECT_NAME: f8t
+      SERVICE_NAME: admin
       AZURE_REGION_SHORT_NAME: ${{ vars.AZURE_REGION_SHORT_NAME }}
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}

@@ -10,9 +10,6 @@ on:
       SERVICE_NAME:
         required: true
         type: string
-      DOTNET_VERSION:
-        required: true
-        type: string
       AZURE_REGION_SHORT_NAME:
         required: true
         type: string
@@ -26,6 +23,9 @@ on:
       REGISTRY_PASSWORD:
         required: true
 
+env:
+  DOTNET_VERSION: 7.0.x
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -36,7 +36,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: ${{ inputs.DOTNET_VERSION }}
+        dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: Tests
       run: dotnet test ./test/Bz.F8t.Administration.Domain.UnitTests/Bz.F8t.Administration.Domain.UnitTests.csproj
