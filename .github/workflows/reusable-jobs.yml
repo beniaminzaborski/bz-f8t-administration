@@ -27,7 +27,7 @@ env:
   DOTNET_VERSION: 7.0.x
 
 jobs:
-  build-and-deploy:
+  build-and-deploy-service:
     runs-on: ubuntu-latest
     steps:
     - name: 'Checkout GitHub Action'
