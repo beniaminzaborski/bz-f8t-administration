@@ -4,12 +4,6 @@ on:
       ENVIRONMENT_TYPE:
         required: true
         type: string
-      PROJECT_NAME:
-        required: true
-        type: string
-      SERVICE_NAME:
-        required: true
-        type: string
       AZURE_REGION_SHORT_NAME:
         required: true
         type: string
@@ -24,6 +18,8 @@ on:
         required: true
 
 env:
+  PROJECT_NAME: f8t
+  SERVICE_NAME: admin
   DOTNET_VERSION: 7.0.x
 
 jobs:
@@ -53,8 +49,8 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
     - run: |
-       docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ inputs.PROJECT_NAME }}-${{ inputs.SERVICE_NAME }}:${{ github.sha }} -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ inputs.PROJECT_NAME }}-${{ inputs.SERVICE_NAME }}:latest -f ./src/Bz.F8t.Administration.WebAPI/Dockerfile
-       docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ inputs.PROJECT_NAME }}-${{ inputs.SERVICE_NAME }} --all-tags
+       docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}:${{ github.sha }} -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}:latest -f ./src/Bz.F8t.Administration.WebAPI/Dockerfile
+       docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }} --all-tags
 
     # TODO: Scan docker images for vulnerabilities
 
@@ -62,32 +58,32 @@ jobs:
     - name: 'Get AppInsights connection string from Azure KeyVault'
       uses: theotow/keyvault-secret-azure@v1
       with:
-        key-vault-name: kv-${{ inputs.PROJECT_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }}
+        key-vault-name: kv-${{ env.PROJECT_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }}
         config: |
           {"APP_INSIGHTS_CONNSTR": "ConnectionString-Fott-AppInsights"}
     - name: 'Get database connection string from Azure KeyVault'
       uses: theotow/keyvault-secret-azure@v1
       with:
-        key-vault-name: kv-${{ inputs.PROJECT_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }}
+        key-vault-name: kv-${{ env.PROJECT_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }}
         config: |
           {"DB_ADMIN_CONNSTR": "ConnectionString-Fott-Administration-Postgres"}
     - name: 'Get ServiceBus connection string from Azure KeyVault'
       uses: theotow/keyvault-secret-azure@v1
       with:
-        key-vault-name: kv-${{ inputs.PROJECT_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }}
+        key-vault-name: kv-${{ env.PROJECT_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }}
         config: |
           {"SERVICE_BUS_CONNSTR": "ConnectionString-Fott-ServiceBus"}
 
     - name: 'Prepare k8s deployment'
-      run: envsubst < k8s/bz-${{ inputs.PROJECT_NAME }}-${{ inputs.SERVICE_NAME }}.yaml > k8s/bz-${{ inputs.PROJECT_NAME }}-${{ inputs.SERVICE_NAME }}-prepared.yaml
+      run: envsubst < k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}.yaml > k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-prepared.yaml
 
     # Deploy to AKS
     - name: 'Set the target AKS cluster'
       uses: Azure/aks-set-context@v1
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
-        cluster-name: 'aks-${{ inputs.PROJECT_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }}'
-        resource-group: 'rg-${{ inputs.PROJECT_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }}'
+        cluster-name: 'aks-${{ env.PROJECT_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }}'
+        resource-group: 'rg-${{ env.PROJECT_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }}'
 
     # Get secrets from Azure KeyVault to environments
     - name: 'Create k8s secrets'
@@ -104,8 +100,8 @@ jobs:
       uses: Azure/k8s-deploy@v1
       with:
         manifests: |
-          k8s/bz-${{ inputs.PROJECT_NAME }}-${{ inputs.SERVICE_NAME }}-prepared.yaml
+          k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-prepared.yaml
         images: |
-          ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ inputs.PROJECT_NAME }}-${{ inputs.SERVICE_NAME }}:${{ github.sha }}
+          ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}:${{ github.sha }}
         imagepullsecrets: |
           k8s-secret
