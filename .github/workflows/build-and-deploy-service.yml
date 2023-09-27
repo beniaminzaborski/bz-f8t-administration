@@ -1,4 +1,4 @@
-name: Build a docker image and push to the container registry
+name: Build a docker image, push to the container registry and deploy into k8s
 
 on:
   workflow_dispatch: {}
@@ -10,7 +10,7 @@ on:
     - 'test/**'
 
 jobs:
-  build-and-deploy:
+  build-and-deploy-service-in-dev:
     uses: ./.github/workflows/reusable-jobs.yml
     with:
       ENVIRONMENT_TYPE: dev
