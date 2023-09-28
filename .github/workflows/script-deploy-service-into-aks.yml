@@ -52,7 +52,7 @@ jobs:
           {"SERVICE_BUS_CONNSTR": "ConnectionString-Fott-ServiceBus"}
 
     - name: 'Prepare k8s deployment'
-      run: envsubst < k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}.yaml > k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-prepared.yaml
+      run: envsubst < ./k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}.yaml > ./k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-prepared.yaml
 
     # Deploy to AKS
     - name: 'Set the target AKS cluster'
