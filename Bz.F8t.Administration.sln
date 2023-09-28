@@ -23,7 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\build-and-deploy-service.yml = .github\workflows\build-and-deploy-service.yml
 		.github\workflows\build-and-publish-nugets.yml = .github\workflows\build-and-publish-nugets.yml
-		.github\workflows\reusable-jobs.yml = .github\workflows\reusable-jobs.yml
+		.github\workflows\script-build-service-docker-image-and-push-into-acr.yml = .github\workflows\script-build-service-docker-image-and-push-into-acr.yml
+		.github\workflows\script-deploy-service-into-aks.yml = .github\workflows\script-deploy-service-into-aks.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{588476D4-9B9F-47C3-B7DE-91BB14FB8AC5}"

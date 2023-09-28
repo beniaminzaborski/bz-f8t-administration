@@ -3,6 +3,9 @@ name: Build a docker image, push to the container registry and deploy into k8s
 on:
   workflow_dispatch: {}
   push:
+    branches:
+    - develop
+    - main
     paths-ignore:
     - 'src/Shared/**'
     - 'README.ME'
@@ -10,8 +13,21 @@ on:
     - 'test/**'
 
 jobs:
-  build-and-deploy-service-in-dev:
-    uses: ./.github/workflows/reusable-jobs.yml
+  build-service-in-dev:
+    if: ${{ github.ref == 'refs/heads/develop' }}
+    uses: ./.github/workflows/script-build-service-docker-image-and-push-into-acr.yml
+    with:
+      ENVIRONMENT_TYPE: dev
+    secrets:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      REGISTRY_LOGIN_SERVER: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+
+  deploy-service-in-dev:
+    if: ${{ github.ref == 'refs/heads/develop' }}
+    uses: ./.github/workflows/script-deploy-service-into-aks.yml
+    needs: build-service-in-dev
     with:
       ENVIRONMENT_TYPE: dev
       AZURE_REGION_SHORT_NAME: ${{ vars.AZURE_REGION_SHORT_NAME }}
@@ -21,15 +37,28 @@ jobs:
       REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
 
-  # build-and-deploy-service-in-uat:
-  #   uses: ./.github/workflows/reusable-jobs.yml
-  #   with:
-  #     ENVIRONMENT_TYPE: uat
-  #     PROJECT_NAME: f8t
-  #     SERVICE_NAME: admin
-  #     AZURE_REGION_SHORT_NAME: ${{ vars.AZURE_REGION_SHORT_NAME }}
-  #   secrets:
-  #     AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-  #     REGISTRY_LOGIN_SERVER: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-  #     REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
-  #     REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+  build-service-in-uat:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    uses: ./.github/workflows/script-build-service-docker-image-and-push-into-acr.yml
+    with:
+      ENVIRONMENT_TYPE: uat
+    secrets:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      REGISTRY_LOGIN_SERVER: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+
+  deploy-service-in-uat:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    uses: ./.github/workflows/script-deploy-service-into-aks.yml
+    needs: build-service-in-uat
+    with:
+      ENVIRONMENT_TYPE: uat
+      AZURE_REGION_SHORT_NAME: ${{ vars.AZURE_REGION_SHORT_NAME }}
+    secrets:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      REGISTRY_LOGIN_SERVER: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+
+# TODO: PROD

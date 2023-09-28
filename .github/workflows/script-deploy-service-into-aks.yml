@@ -20,39 +20,16 @@ on:
 env:
   PROJECT_NAME: f8t
   SERVICE_NAME: admin
-  DOTNET_VERSION: 7.0.x
 
 jobs:
-  build-and-deploy-service:
+  deploy-service-into-aks:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.ENVIRONMENT_TYPE }}
     steps:
-    - name: 'Checkout GitHub Action'
-      uses: actions/checkout@main
-
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
-
-    - name: Tests
-      run: dotnet test ./test/Bz.F8t.Administration.Domain.UnitTests/Bz.F8t.Administration.Domain.UnitTests.csproj
-
     - name: 'Login via Azure CLI'
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-    - name: 'Build and push image'
-      uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}
-    - run: |
-       docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}:${{ github.sha }} -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}:latest -f ./src/Bz.F8t.Administration.WebAPI/Dockerfile
-       docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }} --all-tags
-
-    # TODO: Scan docker images for vulnerabilities
 
     # Get secrets form Azure KeyVault
     - name: 'Get AppInsights connection string from Azure KeyVault'
