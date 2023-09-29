@@ -11,9 +11,9 @@ public static class DependencyInjection
     public static IServiceCollection AddApplication(this IServiceCollection service)
     {
         return service
-            .AddMediatR(
-                typeof(Application.Common.IUnitOfWork),
-                typeof(Domain.Common.IDomainEvent))
+            .AddMediatR(c => c.RegisterServicesFromAssemblies(
+                typeof(Application.Common.IUnitOfWork).Assembly,
+                typeof(Domain.Common.IDomainEvent).Assembly))
             .AddApplicationServices()
             .AddAutoMapper(Assembly.GetExecutingAssembly())
             .AddValidators();
