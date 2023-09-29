@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bz-f8t-admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bz-f8t-admin
+  template:
+    metadata:
+      labels:
+        app: bz-f8t-admin
+    spec:
+      containers:
+      - name: bz-f8t-admin
+        image: crf8tuatwesteu.azurecr.io/bz-f8t-admin:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        - name: ConnectionStrings__Postgres
+          value: "$DB_ADMIN_CONNSTR"
+        - name: ConnectionStrings__AzureServiceBus
+          value: "$SERVICE_BUS_CONNSTR"
+        - name: ConnectionStrings__ApplicationInsights
+          value: "$APP_INSIGHTS_CONNSTR"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: "app"
+                    operator: In
+                    values:
+                    - bz-f8t-admin
+              topologyKey: "kubernetes.io/hostname"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bz-f8t-admin-svc
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  selector:
+    app: bz-f8t-admin

@@ -39,7 +39,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "k8s", "k8s", "{EF26FC4D-6F9D-464D-B865-FC6BF31DBC17}"
 	ProjectSection(SolutionItems) = preProject
-		k8s\bz-f8t-admin.yaml = k8s\bz-f8t-admin.yaml
+		k8s\bz-f8t-admin-dev.yaml = k8s\bz-f8t-admin-dev.yaml
+		k8s\bz-f8t-admin-prod.yaml = k8s\bz-f8t-admin-prod.yaml
+		k8s\bz-f8t-admin-uat.yaml = k8s\bz-f8t-admin-uat.yaml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{6199844C-9B68-4609-8F0E-B581536FBCB0}"

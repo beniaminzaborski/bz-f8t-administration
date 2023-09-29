@@ -55,11 +55,11 @@ jobs:
       uses: actions/checkout@v4
       with:
         sparse-checkout: |
-           k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}.yaml
+           k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}.yaml
         sparse-checkout-cone-mode: false
 
     - name: 'Prepare k8s deployment'
-      run: envsubst < k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}.yaml > k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-prepared.yaml
+      run: envsubst < k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}.yaml > k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-prepared.yaml
 
     # Deploy to AKS
     - name: 'Set the target AKS cluster'
@@ -84,7 +84,7 @@ jobs:
       uses: Azure/k8s-deploy@v1
       with:
         manifests: |
-          k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-prepared.yaml
+          k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-prepared.yaml
         images: |
           ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}:${{ github.sha }}
         imagepullsecrets: |
