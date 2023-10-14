@@ -54,7 +54,7 @@ To deploy this project from GitHub Actions:
 * Run GitHub workflow named 'Build a docker image and push to the container registry' to deploy service into AKS
 
 ## Deployment strategy into environments
-(./doc/f8t_branches_environments.png)
+![Branches and environments](./doc/f8t_branches_environments.png)
 
 ## F8T repositories
 * Infrastructure: [github.com/beniaminzaborski/bz-f8t-infrastructure](https://github.com/beniaminzaborski/bz-f8t-infrastructure)
