@@ -52,6 +52,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{619984
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bz.F8t.Administration.Messaging", "src\Shared\Bz.F8t.Administration.Messaging\Bz.F8t.Administration.Messaging.csproj", "{D5A78708-D1CC-4515-836A-6E29BE05203A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "diagrams", "diagrams", "{119F8B19-916E-4FA4-9BF5-D91A73BB0699}"
+	ProjectSection(SolutionItems) = preProject
+		doc\diagrams\f8t_branches_environments.drawio = doc\diagrams\f8t_branches_environments.drawio
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +100,7 @@ Global
 		{61B27004-9D80-4582-B8FC-0B89CB80A8C3} = {668DE3BA-AFC5-4737-9713-EDA4407A0A3F}
 		{6199844C-9B68-4609-8F0E-B581536FBCB0} = {1C3C3228-CF7D-4CD0-8CC6-659109DF05FE}
 		{D5A78708-D1CC-4515-836A-6E29BE05203A} = {6199844C-9B68-4609-8F0E-B581536FBCB0}
+		{119F8B19-916E-4FA4-9BF5-D91A73BB0699} = {588476D4-9B9F-47C3-B7DE-91BB14FB8AC5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {97F31DEE-3931-45EB-9080-33C0E8B6E949}
