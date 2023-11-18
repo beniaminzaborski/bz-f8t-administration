@@ -61,13 +61,23 @@ jobs:
     - name: 'Prepare k8s deployment'
       run: envsubst < k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}.yaml > k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-prepared.yaml
 
-    # Deploy to AKS
+    # Deploy to non-prod AKS
     - name: 'Set the target AKS cluster'
       uses: Azure/aks-set-context@v1
+      if: ${{ inputs.ENVIRONMENT_TYPE != 'uat' && inputs.ENVIRONMENT_TYPE != 'prod' }}
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
         cluster-name: 'aks-${{ env.PROJECT_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }}'
-        resource-group: 'rg-${{ env.PROJECT_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }}'
+        resource-group: 'rg-${{ env.PROJECT_NAME }}-nonprod-${{ inputs.AZURE_REGION_SHORT_NAME }}'
+
+    # Deploy to prod AKS
+    - name: 'Set the target AKS cluster'
+      uses: Azure/aks-set-context@v1
+      if: ${{ inputs.ENVIRONMENT_TYPE == 'uat' || inputs.ENVIRONMENT_TYPE == 'prod' }}
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
+        cluster-name: 'aks-${{ env.PROJECT_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }}'
+        resource-group: 'rg-${{ env.PROJECT_NAME }}-prod-${{ inputs.AZURE_REGION_SHORT_NAME }}'
 
     # Get secrets from Azure KeyVault to environments
     - name: 'Create k8s secrets'
