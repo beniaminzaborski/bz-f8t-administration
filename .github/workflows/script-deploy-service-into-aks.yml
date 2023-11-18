@@ -58,6 +58,9 @@ jobs:
            k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}.yaml
         sparse-checkout-cone-mode: false
 
+    - name: 'Set container registry name for k8s deployment'
+      run: echo "REGISTRY_LOGIN_SERVER=${{ secrets.REGISTRY_LOGIN_SERVER }}" >> $GITHUB_ENV
+
     - name: 'Prepare k8s deployment'
       run: envsubst < k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}.yaml > k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-prepared.yaml
 
