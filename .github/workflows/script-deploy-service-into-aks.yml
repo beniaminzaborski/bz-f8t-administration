@@ -20,6 +20,7 @@ on:
 env:
   PROJECT_NAME: f8t
   SERVICE_NAME: admin
+  K8S_NAMESPACE: f8t-apps
 
 jobs:
   deploy-service-into-aks:
@@ -91,12 +92,13 @@ jobs:
         container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
         secret-name: k8s-secret
 
-    # TODO: Pass secrets from environments to k8s cluster
+    - name: 'Create k8s namespace'
+      run: kubectl create namespace ${{ env.K8S_NAMESPACE }}
 
     - name: 'Deploy to AKS cluster'
       uses: Azure/k8s-deploy@v1
       with:
-        namespace: 'f8t-applications'
+        namespace: '${{ env.K8S_NAMESPACE }}'
         manifests: |
           k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-prepared.yaml
         images: |
