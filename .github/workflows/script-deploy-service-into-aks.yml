@@ -96,6 +96,7 @@ jobs:
     - name: 'Deploy to AKS cluster'
       uses: Azure/k8s-deploy@v1
       with:
+        namespace: 'f8t-applications'
         manifests: |
           k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-prepared.yaml
         images: |
