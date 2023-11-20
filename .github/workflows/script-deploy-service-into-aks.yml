@@ -93,7 +93,7 @@ jobs:
         secret-name: k8s-secret
 
     - name: 'Create k8s namespace'
-      run: kubectl create namespace ${{ env.K8S_NAMESPACE }}
+      run: kubectl get namespace | grep -q "^${{ env.K8S_NAMESPACE }}" || kubectl create namespace ${{ env.K8S_NAMESPACE }}
 
     - name: 'Deploy to AKS cluster'
       uses: Azure/k8s-deploy@v1
