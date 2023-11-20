@@ -45,6 +45,7 @@ spec:
               topologyKey: "kubernetes.io/hostname"
 ---
 apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
 metadata:
   name: bz-f8t-admin-hpa
 spec:
