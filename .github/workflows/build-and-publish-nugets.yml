@@ -1,4 +1,4 @@
-name: Build and publish Bz.F8t.Administration.Messaging NuGet package into GitHub feeds
+name: Build & publish NuGet packages
 
 on:
   workflow_dispatch: {}
