@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: bz-f8t-admin
-        image: crf8tuatwesteu.azurecr.io/bz-f8t-admin:latest
+        image: $REGISTRY_LOGIN_SERVER/bz-f8t-admin:latest
         ports:
         - containerPort: 80
         env:
@@ -26,6 +26,13 @@ spec:
           value: "$SERVICE_BUS_CONNSTR"
         - name: ConnectionStrings__ApplicationInsights
           value: "$APP_INSIGHTS_CONNSTR"
+        resources:
+          requests:
+            cpu: 1m
+            memory: 75Mi
+          limits:
+            cpu: 1000m
+            memory: 1024Mi
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -36,6 +43,19 @@ spec:
                     values:
                     - bz-f8t-admin
               topologyKey: "kubernetes.io/hostname"
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: bz-f8t-admin-hpa
+spec:
+  maxReplicas: 6
+  minReplicas: 3
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: bz-f8t-admin
+  targetCPUUtilizationPercentage: 50
 ---
 apiVersion: v1
 kind: Service

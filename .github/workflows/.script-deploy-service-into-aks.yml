@@ -20,6 +20,7 @@ on:
 env:
   PROJECT_NAME: f8t
   SERVICE_NAME: admin
+  K8S_NAMESPACE: f8t-apps
 
 jobs:
   deploy-service-into-aks:
@@ -58,16 +59,29 @@ jobs:
            k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}.yaml
         sparse-checkout-cone-mode: false
 
+    - name: 'Set container registry name for k8s deployment'
+      run: echo "REGISTRY_LOGIN_SERVER=${{ secrets.REGISTRY_LOGIN_SERVER }}" >> $GITHUB_ENV
+
     - name: 'Prepare k8s deployment'
       run: envsubst < k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}.yaml > k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-prepared.yaml
 
-    # Deploy to AKS
+    # Deploy to non-prod AKS
     - name: 'Set the target AKS cluster'
       uses: Azure/aks-set-context@v1
+      if: ${{ inputs.ENVIRONMENT_TYPE != 'uat' && inputs.ENVIRONMENT_TYPE != 'prod' }}
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
         cluster-name: 'aks-${{ env.PROJECT_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }}'
-        resource-group: 'rg-${{ env.PROJECT_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }}'
+        resource-group: 'rg-${{ env.PROJECT_NAME }}-nonprod-${{ inputs.AZURE_REGION_SHORT_NAME }}'
+
+    # Deploy to prod AKS
+    - name: 'Set the target AKS cluster'
+      uses: Azure/aks-set-context@v1
+      if: ${{ inputs.ENVIRONMENT_TYPE == 'uat' || inputs.ENVIRONMENT_TYPE == 'prod' }}
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
+        cluster-name: 'aks-${{ env.PROJECT_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }}'
+        resource-group: 'rg-${{ env.PROJECT_NAME }}-prod-${{ inputs.AZURE_REGION_SHORT_NAME }}'
 
     # Get secrets from Azure KeyVault to environments
     - name: 'Create k8s secrets'
@@ -78,11 +92,13 @@ jobs:
         container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
         secret-name: k8s-secret
 
-    # TODO: Pass secrets from environments to k8s cluster
+    - name: 'Create k8s namespace'
+      run: kubectl get namespace | grep -q "^${{ env.K8S_NAMESPACE }}" || kubectl create namespace ${{ env.K8S_NAMESPACE }}
 
     - name: 'Deploy to AKS cluster'
       uses: Azure/k8s-deploy@v1
       with:
+        namespace: '${{ env.K8S_NAMESPACE }}'
         manifests: |
           k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-prepared.yaml
         images: |

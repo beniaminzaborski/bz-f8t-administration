@@ -15,7 +15,7 @@ on:
 jobs:
   build-service-in-dev:
     if: ${{ github.ref == 'refs/heads/develop' }}
-    uses: ./.github/workflows/script-build-service-docker-image-and-push-into-acr.yml
+    uses: ./.github/workflows/.script-build-service-docker-image-and-push-into-acr.yml
     with:
       ENVIRONMENT_TYPE: dev
     secrets:
@@ -26,7 +26,7 @@ jobs:
 
   deploy-service-in-dev:
     if: ${{ github.ref == 'refs/heads/develop' }}
-    uses: ./.github/workflows/script-deploy-service-into-aks.yml
+    uses: ./.github/workflows/.script-deploy-service-into-aks.yml
     needs: build-service-in-dev
     with:
       ENVIRONMENT_TYPE: dev
@@ -39,7 +39,7 @@ jobs:
 
   build-service-in-uat:
     if: ${{ github.ref == 'refs/heads/main' }}
-    uses: ./.github/workflows/script-build-service-docker-image-and-push-into-acr.yml
+    uses: ./.github/workflows/.script-build-service-docker-image-and-push-into-acr.yml
     with:
       ENVIRONMENT_TYPE: uat
     secrets:
@@ -50,7 +50,7 @@ jobs:
 
   deploy-service-in-uat:
     if: ${{ github.ref == 'refs/heads/main' }}
-    uses: ./.github/workflows/script-deploy-service-into-aks.yml
+    uses: ./.github/workflows/.script-deploy-service-into-aks.yml
     needs: build-service-in-uat
     with:
       ENVIRONMENT_TYPE: uat
@@ -63,7 +63,7 @@ jobs:
 
   deploy-service-in-prod:
     if: ${{ github.ref == 'refs/heads/main' }}
-    uses: ./.github/workflows/script-deploy-service-into-aks.yml
+    uses: ./.github/workflows/.script-deploy-service-into-aks.yml
     needs: 
     - deploy-service-in-uat
     with:
