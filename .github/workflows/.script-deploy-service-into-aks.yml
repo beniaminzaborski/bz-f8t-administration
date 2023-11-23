@@ -92,9 +92,14 @@ jobs:
         container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
         secret-name: k8s-secret
 
-    - name: Fetch version from sha
+    - name: Fetch version
       id: fetch_version
-      run: ((${{ inputs.ENVIRONMENT_TYPE == 'uat' || inputs.ENVIRONMENT_TYPE == 'prod' }})) && echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/} || echo ::set-output name=VERSION::${{ github.sha }}
+      run: |
+        if [ ${{ inputs.ENVIRONMENT_TYPE == 'uat' || inputs.ENVIRONMENT_TYPE == 'prod' }} ]; then
+          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        else
+          echo "VERSION=${{ github.sha }}" >> $GITHUB_OUTPUT
+        fi
 
     - name: 'Create k8s namespace'
       run: kubectl get namespace | grep -q "^${{ env.K8S_NAMESPACE }}" || kubectl create namespace ${{ env.K8S_NAMESPACE }}

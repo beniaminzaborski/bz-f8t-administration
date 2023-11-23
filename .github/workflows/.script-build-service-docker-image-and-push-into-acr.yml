@@ -27,9 +27,14 @@ jobs:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@v4
 
-    - name: Fetch version from sha
+    - name: Fetch version
       id: fetch_version
-      run: ((${{ inputs.ENVIRONMENT_TYPE == 'uat' || inputs.ENVIRONMENT_TYPE == 'prod' }})) && echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/} || echo ::set-output name=VERSION::${{ github.sha }}
+      run: |
+        if [ ${{ inputs.ENVIRONMENT_TYPE == 'uat' || inputs.ENVIRONMENT_TYPE == 'prod' }} ]; then
+          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        else
+          echo "VERSION=${{ github.sha }}" >> $GITHUB_OUTPUT
+        fi
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
