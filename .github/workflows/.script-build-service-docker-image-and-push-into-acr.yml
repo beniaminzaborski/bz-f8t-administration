@@ -27,19 +27,13 @@ jobs:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@v4
 
-    - name: GitHub Tag Name example
-      run: |
-        echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
-        echo "Tag name from github.ref_name: ${{  github.ref_name }}"
-        echo "SHA: ${{  github.sha }}"
-
     - name: Fetch version
       id: fetch_version
       run: |
         if [ ${{ inputs.ENVIRONMENT_TYPE == 'uat' || inputs.ENVIRONMENT_TYPE == 'prod' }} ]; then
-          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          echo "VERSION=${{ github.ref_name }}" >> $GITHUB_OUTPUT # Tag name as a container image version
         else
-          echo "VERSION=${{ github.sha }}" >> $GITHUB_OUTPUT
+          echo "VERSION=${{ github.sha }}" >> $GITHUB_OUTPUT # SHA as a container image version
         fi
 
     - name: Setup .NET
