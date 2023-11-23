@@ -94,13 +94,7 @@ jobs:
 
     - name: Fetch version from sha
       id: fetch_version
-      run: echo ::set-output name=VERSION::${{ github.sha }}
-      if: ${{ inputs.ENVIRONMENT_TYPE != 'uat' && inputs.ENVIRONMENT_TYPE != 'prod' }}
-
-    - name: Fetch version from tag
-      id: fetch_version
-      run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
-      if: ${{ inputs.ENVIRONMENT_TYPE == 'uat' || inputs.ENVIRONMENT_TYPE == 'prod' }}
+      run: ((${{ inputs.ENVIRONMENT_TYPE == 'uat' || inputs.ENVIRONMENT_TYPE == 'prod' }})) && echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/} || echo ::set-output name=VERSION::${{ github.sha }}
 
     - name: 'Create k8s namespace'
       run: kubectl get namespace | grep -q "^${{ env.K8S_NAMESPACE }}" || kubectl create namespace ${{ env.K8S_NAMESPACE }}
