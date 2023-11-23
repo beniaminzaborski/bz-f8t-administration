@@ -96,9 +96,9 @@ jobs:
       id: fetch_version
       run: |
         if [ ${{ inputs.ENVIRONMENT_TYPE == 'uat' || inputs.ENVIRONMENT_TYPE == 'prod' }} ]; then
-          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          echo "VERSION=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
         else
-          echo "VERSION=${{ github.sha }}" >> $GITHUB_OUTPUT
+          echo "VERSION=${{ github.sha }}" >> "$GITHUB_OUTPUT"
         fi
 
     - name: 'Create k8s namespace'
