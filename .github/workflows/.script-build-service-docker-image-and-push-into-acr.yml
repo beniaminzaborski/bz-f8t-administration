@@ -27,6 +27,16 @@ jobs:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@v4
 
+    - name: Fetch version from sha
+      id: fetch_version
+      run: echo ::set-output name=VERSION::${{ github.sha }}
+      if: ${{ inputs.ENVIRONMENT_TYPE != 'uat' && inputs.ENVIRONMENT_TYPE != 'prod' }}
+
+    - name: Fetch version from tag
+      id: fetch_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+      if: ${{ inputs.ENVIRONMENT_TYPE == 'uat' || inputs.ENVIRONMENT_TYPE == 'prod' }}
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
@@ -47,7 +57,7 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
     - run: |
-       docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}:${{ github.sha }} -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}:latest -f ./src/Bz.F8t.Administration.WebAPI/Dockerfile
+       docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}:${{ steps.fetch_version.outputs.VERSION }} -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}:latest -f ./src/Bz.F8t.Administration.WebAPI/Dockerfile
        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }} --all-tags
 
     # TODO: Scan docker images for vulnerabilities
