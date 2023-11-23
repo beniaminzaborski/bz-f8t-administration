@@ -95,7 +95,7 @@ jobs:
     - name: Fetch version
       id: fetch_version
       run: |
-        if [ ${{inputs.ENVIRONMENT_TYPE}} == 'uat' || ${{inputs.ENVIRONMENT_TYPE}} == 'prod' ]; then
+        if [ ${{inputs.ENVIRONMENT_TYPE}} == 'uat' ] || [ ${{inputs.ENVIRONMENT_TYPE}} == 'prod' ]; then
           echo "VERSION=${{ github.ref_name }}" >> $GITHUB_OUTPUT # Tag name as a container image version
         else
           echo "VERSION=${{ github.sha }}" >> $GITHUB_OUTPUT # SHA as a container image version
