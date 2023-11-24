@@ -30,46 +30,46 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT_TYPE }}
     steps:
-    - name: 'Login via Azure CLI'
+    - name: Login to Azure
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     # Get secrets form Azure KeyVault
-    - name: 'Get AppInsights connection string from Azure KeyVault'
+    - name: Get AppInsights connection string from Azure KeyVault
       uses: theotow/keyvault-secret-azure@v1
       with:
         key-vault-name: kv-${{ env.PROJECT_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }}
         config: |
           {"APP_INSIGHTS_CONNSTR": "ConnectionString-Fott-AppInsights"}
-    - name: 'Get database connection string from Azure KeyVault'
+    - name: Get database connection string from Azure KeyVault
       uses: theotow/keyvault-secret-azure@v1
       with:
         key-vault-name: kv-${{ env.PROJECT_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }}
         config: |
           {"DB_ADMIN_CONNSTR": "ConnectionString-Fott-Administration-Postgres"}
-    - name: 'Get ServiceBus connection string from Azure KeyVault'
+    - name: Get ServiceBus connection string from Azure KeyVault
       uses: theotow/keyvault-secret-azure@v1
       with:
         key-vault-name: kv-${{ env.PROJECT_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }}
         config: |
           {"SERVICE_BUS_CONNSTR": "ConnectionString-Fott-ServiceBus"}
 
-    - name: 'Checkout GitHub k8s deployment file'
+    - name: Checkout GitHub k8s deployment file
       uses: actions/checkout@v4
       with:
         sparse-checkout: |
            k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}.yaml
         sparse-checkout-cone-mode: false
 
-    - name: 'Set container registry name for k8s deployment'
+    - name: Set container registry name for k8s deployment
       run: echo "REGISTRY_LOGIN_SERVER=${{ secrets.REGISTRY_LOGIN_SERVER }}" >> $GITHUB_ENV
 
     - name: 'Prepare k8s deployment'
       run: envsubst < k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}.yaml > k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-prepared.yaml
 
     # Deploy to non-prod AKS
-    - name: 'Set the target AKS cluster'
+    - name: Set the target AKS cluster
       uses: Azure/aks-set-context@v1
       if: ${{ inputs.ENVIRONMENT_TYPE != 'uat' && inputs.ENVIRONMENT_TYPE != 'prod' }}
       with:
@@ -78,7 +78,7 @@ jobs:
         resource-group: 'rg-${{ env.PROJECT_NAME }}-nonprod-${{ inputs.AZURE_REGION_SHORT_NAME }}'
 
     # Deploy to prod AKS
-    - name: 'Set the target AKS cluster'
+    - name: Set the target AKS cluster
       uses: Azure/aks-set-context@v1
       if: ${{ inputs.ENVIRONMENT_TYPE == 'uat' || inputs.ENVIRONMENT_TYPE == 'prod' }}
       with:
@@ -87,7 +87,7 @@ jobs:
         resource-group: 'rg-${{ env.PROJECT_NAME }}-prod-${{ inputs.AZURE_REGION_SHORT_NAME }}'
 
     # Get secrets from Azure KeyVault to environments
-    - name: 'Create k8s secrets'
+    - name: Create k8s secrets
       uses: Azure/k8s-create-secret@v1
       with:
         container-registry-url: '${{ secrets.REGISTRY_LOGIN_SERVER }}'
@@ -95,10 +95,10 @@ jobs:
         container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
         secret-name: k8s-secret
 
-    - name: 'Create k8s namespace'
+    - name: Create k8s namespace
       run: kubectl get namespace | grep -q "^${{ env.K8S_NAMESPACE }}" || kubectl create namespace ${{ env.K8S_NAMESPACE }}
 
-    - name: 'Deploy to AKS cluster'
+    - name: Deploy to AKS cluster
       uses: Azure/k8s-deploy@v1
       with:
         namespace: '${{ env.K8S_NAMESPACE }}'
