@@ -7,6 +7,9 @@ on:
       AZURE_REGION_SHORT_NAME:
         required: true
         type: string
+      TAGS:
+        required: true
+        type: string
     secrets:
       AZURE_CREDENTIALS:
         required: true
@@ -92,15 +95,6 @@ jobs:
         container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
         secret-name: k8s-secret
 
-    - name: Fetch version
-      id: fetch_version
-      run: |
-        if [ ${{inputs.ENVIRONMENT_TYPE}} == 'uat' ] || [ ${{inputs.ENVIRONMENT_TYPE}} == 'prod' ]; then
-          echo "VERSION=${{ github.ref_name }}" >> $GITHUB_OUTPUT # Tag name as a container image version
-        else
-          echo "VERSION=${{ github.sha }}" >> $GITHUB_OUTPUT # SHA as a container image version
-        fi
-
     - name: 'Create k8s namespace'
       run: kubectl get namespace | grep -q "^${{ env.K8S_NAMESPACE }}" || kubectl create namespace ${{ env.K8S_NAMESPACE }}
 
@@ -111,6 +105,6 @@ jobs:
         manifests: |
           k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-prepared.yaml
         images: |
-          ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}:${{ steps.fetch_version.outputs.VERSION }}
+          ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}:${{ inputs.TAGS }}
         imagepullsecrets: |
           k8s-secret

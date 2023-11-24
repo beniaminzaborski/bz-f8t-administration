@@ -22,6 +22,7 @@ jobs:
     with:
       ENVIRONMENT_TYPE: uat
       AZURE_REGION_SHORT_NAME: ${{ vars.AZURE_REGION_SHORT_NAME }}
+      TAGS: ${{ needs.build-service-in-uat.outputs.tags }}
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
       REGISTRY_LOGIN_SERVER: ${{ secrets.REGISTRY_LOGIN_SERVER }}
@@ -31,10 +32,12 @@ jobs:
   deploy-service-in-prod:
     uses: ./.github/workflows/.script-deploy-service-into-aks.yml
     needs: 
+    - build-service-in-uat
     - deploy-service-in-uat
     with:
       ENVIRONMENT_TYPE: prod
       AZURE_REGION_SHORT_NAME: ${{ vars.AZURE_REGION_SHORT_NAME }}
+      TAGS: ${{ needs.build-service-in-uat.outputs.tags }}
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
       REGISTRY_LOGIN_SERVER: ${{ secrets.REGISTRY_LOGIN_SERVER }}

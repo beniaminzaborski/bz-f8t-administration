@@ -23,18 +23,11 @@ jobs:
   build-service-docker-image-and-push-into-acr:
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT_TYPE }}
+    outputs:
+      tags: ${{ steps.metadata.outputs.tags }}
     steps:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@v4
-
-    - name: Fetch version
-      id: fetch_version
-      run: |
-        if [ ${{inputs.ENVIRONMENT_TYPE}} == 'uat' ] || [ ${{inputs.ENVIRONMENT_TYPE}} == 'prod' ]; then
-          echo "VERSION=${{ github.ref_name }}" >> $GITHUB_OUTPUT # Tag name as a container image version
-        else
-          echo "VERSION=${{ github.sha }}" >> $GITHUB_OUTPUT # SHA as a container image version
-        fi
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
@@ -49,14 +42,20 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: 'Build and push image'
-      uses: azure/docker-login@v1
+    - name: Docker metadata
+      id: metadata
+      uses: docker/metadata-action@v5
       with:
-        login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}
-    - run: |
-       docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}:${{ steps.fetch_version.outputs.VERSION }} -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}:latest -f ./src/Bz.F8t.Administration.WebAPI/Dockerfile
-       docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }} --all-tags
+        images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}
+        tags: |
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=raw,value={{sha}},enable=${{ github.ref_type != 'tag' }}
 
-    # TODO: Scan docker images for vulnerabilities
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: ${{ steps.metadata.outputs.tags }}
+        labels: ${{ steps.metadata.outputs.labels }}
