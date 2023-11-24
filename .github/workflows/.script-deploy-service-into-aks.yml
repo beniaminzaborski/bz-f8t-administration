@@ -7,9 +7,6 @@ on:
       AZURE_REGION_SHORT_NAME:
         required: true
         type: string
-      TAGS:
-        required: true
-        type: string
     secrets:
       AZURE_CREDENTIALS:
         required: true
@@ -98,6 +95,16 @@ jobs:
     - name: Create k8s namespace
       run: kubectl get namespace | grep -q "^${{ env.K8S_NAMESPACE }}" || kubectl create namespace ${{ env.K8S_NAMESPACE }}
 
+    - name: Determine Docker image metadata
+      id: metadata
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}
+        tags: |
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=raw,value={{sha}},enable=${{ github.ref_type != 'tag' }}
+
     - name: Deploy to AKS cluster
       uses: Azure/k8s-deploy@v1
       with:
@@ -105,6 +112,6 @@ jobs:
         manifests: |
           k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-prepared.yaml
         images: |
-          ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}:${{ inputs.TAGS }}
+          ${{ steps.metadata.outputs.tags }}
         imagepullsecrets: |
           k8s-secret

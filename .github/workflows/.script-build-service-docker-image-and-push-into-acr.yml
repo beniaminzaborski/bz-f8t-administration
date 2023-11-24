@@ -23,8 +23,6 @@ jobs:
   build-service-docker-image-and-push-into-acr:
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT_TYPE }}
-    outputs:
-      tags: ${{ steps.metadata.outputs.tags }}
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -42,7 +40,7 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Docker metadata
+    - name: Determine Docker image metadata
       id: metadata
       uses: docker/metadata-action@v5
       with:
