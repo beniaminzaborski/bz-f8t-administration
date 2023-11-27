@@ -27,6 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT_TYPE }}
     steps:
+    # Log in to Azure
     - name: Login to Azure
       uses: azure/login@v1
       with:
@@ -52,6 +53,7 @@ jobs:
         config: |
           {"SERVICE_BUS_CONNSTR": "ConnectionString-Fott-ServiceBus"}
 
+    # Checkout k8s deployment yaml file from git repository
     - name: Checkout GitHub k8s deployment file
       uses: actions/checkout@v4
       with:
@@ -59,13 +61,15 @@ jobs:
            k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}.yaml
         sparse-checkout-cone-mode: false
 
+    # Set the container regsitry name from secrets
     - name: Set container registry name for k8s deployment
       run: echo "REGISTRY_LOGIN_SERVER=${{ secrets.REGISTRY_LOGIN_SERVER }}" >> $GITHUB_ENV
 
+    # Replace placeholders in k8s deployment file with environment variables
     - name: 'Prepare k8s deployment'
       run: envsubst < k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}.yaml > k8s/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-prepared.yaml
 
-    # Deploy to non-prod AKS
+    # Set the target AKS as non-prod
     - name: Set the target AKS cluster
       uses: Azure/aks-set-context@v1
       if: ${{ inputs.ENVIRONMENT_TYPE != 'uat' && inputs.ENVIRONMENT_TYPE != 'prod' }}
@@ -74,7 +78,7 @@ jobs:
         cluster-name: 'aks-${{ env.PROJECT_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }}'
         resource-group: 'rg-${{ env.PROJECT_NAME }}-nonprod-${{ inputs.AZURE_REGION_SHORT_NAME }}'
 
-    # Deploy to prod AKS
+    # Set the target AKS as prod
     - name: Set the target AKS cluster
       uses: Azure/aks-set-context@v1
       if: ${{ inputs.ENVIRONMENT_TYPE == 'uat' || inputs.ENVIRONMENT_TYPE == 'prod' }}
@@ -92,9 +96,14 @@ jobs:
         container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
         secret-name: k8s-secret
 
+    # Create a k8s namespace
     - name: Create k8s namespace
       run: kubectl get namespace | grep -q "^${{ env.K8S_NAMESPACE }}" || kubectl create namespace ${{ env.K8S_NAMESPACE }}
 
+    # Determine a docker image version (as docker image tag) depends on how the workflow has been triggered
+    # For trigger by push a commit then docker image tag is github sha
+    # For trigger by git tag (v{major.minor.fix}) then docker image tag is {major.minor.fix}
+    # This step sets these tags as a step output: steps.metadata.outputs.tags
     - name: Determine Docker image metadata
       id: metadata
       uses: docker/metadata-action@v5
@@ -106,6 +115,7 @@ jobs:
           type=semver,pattern={{version}}
           type=raw,value={{sha}},enable=${{ github.ref_type != 'tag' }}
 
+    # Deploy the docker image from ACR into AKS
     - name: Deploy to AKS cluster
       uses: Azure/k8s-deploy@v1
       with:
