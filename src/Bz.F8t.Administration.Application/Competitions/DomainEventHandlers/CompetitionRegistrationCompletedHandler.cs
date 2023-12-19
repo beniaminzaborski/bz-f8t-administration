@@ -6,18 +6,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Bz.F8t.Administration.Application.Competitions;
 
-public class CompetitionRegistrationCompletedHandler : INotificationHandler<CompetitionRegistrationCompleted>
+public class CompetitionRegistrationCompletedHandler(
+    ILogger<CompetitionRegistrationCompletedHandler> logger,
+    IPublishEndpoint publishEndpoint) : INotificationHandler<CompetitionRegistrationCompleted>
 {
-    private readonly ILogger<CompetitionRegistrationCompletedHandler> _logger;
-    private readonly IPublishEndpoint _publishEndpoint;
-
-    public CompetitionRegistrationCompletedHandler(
-        ILogger<CompetitionRegistrationCompletedHandler> logger,
-        IPublishEndpoint publishEndpoint)
-    {
-        _logger = logger;
-        _publishEndpoint = publishEndpoint;
-    }
+    private readonly ILogger<CompetitionRegistrationCompletedHandler> _logger = logger;
+    private readonly IPublishEndpoint _publishEndpoint = publishEndpoint;
 
     public async Task Handle(CompetitionRegistrationCompleted domainEvent, CancellationToken cancellationToken)
     {

@@ -1,6 +1,6 @@
 ﻿namespace Bz.F8t.Administration.Application.Competitions;
 
-public record CreateCompetitionDto(
+public sealed record CreateCompetitionDto(
     DateTime StartAt,
     DistanceDto Distance,
     CompetitionPlaceDto Place,

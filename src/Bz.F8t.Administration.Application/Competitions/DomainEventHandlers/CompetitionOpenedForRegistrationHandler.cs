@@ -7,21 +7,14 @@ using Bz.F8t.Administration.Domain.ManagingCompetition;
 
 namespace Bz.F8t.Administration.Application.Competitions;
 
-public class CompetitionOpenedForRegistrationHandler : INotificationHandler<CompetitionOpenedForRegistration>
+public class CompetitionOpenedForRegistrationHandler(
+    ILogger<CompetitionOpenedForRegistrationHandler> logger,
+    IPublishEndpoint publishEndpoint,
+    IMapper mapper) : INotificationHandler<CompetitionOpenedForRegistration>
 {
-    private readonly ILogger<CompetitionOpenedForRegistrationHandler> _logger;
-    private readonly IPublishEndpoint _publishEndpoint;
-    private readonly IMapper _mapper;
-
-    public CompetitionOpenedForRegistrationHandler(
-        ILogger<CompetitionOpenedForRegistrationHandler> logger,
-        IPublishEndpoint publishEndpoint,
-        IMapper mapper)
-    {
-        _logger = logger;
-        _publishEndpoint = publishEndpoint;
-        _mapper = mapper;
-    }
+    private readonly ILogger<CompetitionOpenedForRegistrationHandler> _logger = logger;
+    private readonly IPublishEndpoint _publishEndpoint = publishEndpoint;
+    private readonly IMapper _mapper = mapper;
 
     public async Task Handle(CompetitionOpenedForRegistration domainEvent, CancellationToken cancellationToken)
     {

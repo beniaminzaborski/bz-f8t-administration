@@ -6,18 +6,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Bz.F8t.Administration.Application.Competitions;
 
-public class CompetitionMaxCompetitorsIncreasedHandler : INotificationHandler<CompetitionMaxCompetitorsIncreased>
+public class CompetitionMaxCompetitorsIncreasedHandler(
+    ILogger<CompetitionMaxCompetitorsIncreasedHandler> logger,
+    IPublishEndpoint publishEndpoint) : INotificationHandler<CompetitionMaxCompetitorsIncreased>
 {
-    private readonly ILogger<CompetitionMaxCompetitorsIncreasedHandler> _logger;
-    private readonly IPublishEndpoint _publishEndpoint;
-
-    public CompetitionMaxCompetitorsIncreasedHandler(
-        ILogger<CompetitionMaxCompetitorsIncreasedHandler> logger,
-        IPublishEndpoint publishEndpoint)
-    {
-        _logger = logger;
-        _publishEndpoint = publishEndpoint;
-    }
+    private readonly ILogger<CompetitionMaxCompetitorsIncreasedHandler> _logger = logger;
+    private readonly IPublishEndpoint _publishEndpoint = publishEndpoint;
 
     public async Task Handle(CompetitionMaxCompetitorsIncreased domainEvent, CancellationToken cancellationToken)
     {

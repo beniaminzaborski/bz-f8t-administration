@@ -8,17 +8,12 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Bz.F8t.Administration.Infrastructure.Persistence;
 
-internal class ApplicationDbContext : DbContext, IUnitOfWork
+internal class ApplicationDbContext(
+    DbContextOptions<ApplicationDbContext> options,
+    IMediator mediator) : DbContext(options), IUnitOfWork
 {
     private IDbContextTransaction? _transaction;
-    private readonly IMediator _mediator;
-
-    public ApplicationDbContext(
-        DbContextOptions<ApplicationDbContext> options, 
-        IMediator mediator) : base(options)
-    {
-        _mediator = mediator;
-    }
+    private readonly IMediator _mediator = mediator;
 
     public async Task BeginTransactionAsync()
     {

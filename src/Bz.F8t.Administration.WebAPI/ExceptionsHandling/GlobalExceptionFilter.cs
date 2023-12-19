@@ -3,14 +3,9 @@ using System.Net;
 
 namespace Bz.F8t.Administration.WebAPI.ExceptionsHandling;
 
-internal class GlobalExceptionFilter : IExceptionFilter
+internal class GlobalExceptionFilter(ILogger<GlobalExceptionFilter> logger) : IExceptionFilter
 {
-    private readonly ILogger<GlobalExceptionFilter> _logger;
-
-    public GlobalExceptionFilter(ILogger<GlobalExceptionFilter> logger)
-    {
-        _logger = logger;
-    }
+    private readonly ILogger<GlobalExceptionFilter> _logger = logger;
 
     public void OnException(ExceptionContext context)
     {

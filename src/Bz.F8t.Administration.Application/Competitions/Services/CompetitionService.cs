@@ -7,27 +7,18 @@ using FluentValidation;
 
 namespace Bz.F8t.Administration.Application.Competitions;
 
-internal class CompetitionService : ICompetitionService
+internal class CompetitionService(
+    IUnitOfWork unitOfWork,
+    IMapper mapper,
+    ICompetitionRepository competitionRepository,
+    IValidator<CreateCompetitionDto> createCompetitionDtoValidator,
+    IValidator<AddCheckpointRequestDto> addCheckpointRequestDtoValidator) : ICompetitionService
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
-    private readonly ICompetitionRepository _competitionRepository;
-    private readonly IValidator<CreateCompetitionDto> _createCompetitionDtoValidator;
-    private readonly IValidator<AddCheckpointRequestDto> _addCheckpointRequestDtoValidator;
-
-    public CompetitionService(
-        IUnitOfWork unitOfWork,
-        IMapper mapper,
-        ICompetitionRepository competitionRepository,
-        IValidator<CreateCompetitionDto> createCompetitionDtoValidator,
-        IValidator<AddCheckpointRequestDto> addCheckpointRequestDtoValidator)
-    {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
-        _competitionRepository = competitionRepository;
-        _createCompetitionDtoValidator = createCompetitionDtoValidator;
-        _addCheckpointRequestDtoValidator = addCheckpointRequestDtoValidator;
-    }
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IMapper _mapper = mapper;
+    private readonly ICompetitionRepository _competitionRepository = competitionRepository;
+    private readonly IValidator<CreateCompetitionDto> _createCompetitionDtoValidator = createCompetitionDtoValidator;
+    private readonly IValidator<AddCheckpointRequestDto> _addCheckpointRequestDtoValidator = addCheckpointRequestDtoValidator;
 
     public async Task<Guid> CreateCompetitionAsync(CreateCompetitionDto dto)
     {

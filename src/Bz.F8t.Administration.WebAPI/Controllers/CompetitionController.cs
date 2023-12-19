@@ -6,17 +6,12 @@ namespace Bz.F8t.Administration.WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class CompetitionController : ControllerBase
+public class CompetitionController(ICompetitionService competitionService) : ControllerBase
 {
-    private readonly ICompetitionService _competitionService;
-
-    public CompetitionController(ICompetitionService competitionService)
-    {
-        _competitionService = competitionService;
-    }
+    private readonly ICompetitionService _competitionService = competitionService;
 
     [HttpPost]
-    [ProducesResponseType((int)HttpStatusCode.Created)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> CreateAsync([FromBody]CreateCompetitionDto dto)
     {
         var id = await _competitionService.CreateCompetitionAsync(dto);
@@ -24,8 +19,8 @@ public class CompetitionController : ControllerBase
     }
 
     [HttpGet("{id:Guid}")]
-    [ProducesResponseType(typeof(CompetitionDto), (int)HttpStatusCode.OK)]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [ProducesResponseType(typeof(CompetitionDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetAsync(Guid id)
     { 
         var dto = await _competitionService.GetCompetitionAsync(id);
@@ -33,9 +28,9 @@ public class CompetitionController : ControllerBase
     }
 
     [HttpPost("{id:Guid}/Registration/Open")]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> OpenRegistrationAsync(Guid id)
     {
         await _competitionService.OpenRegistrationAsync(id);
@@ -43,9 +38,9 @@ public class CompetitionController : ControllerBase
     }
 
     [HttpPost("{id:Guid}/Registration/Complete")]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> CompleteRegistrationAsync(Guid id)
     {
         await _competitionService.CompleteRegistrationAsync(id);
@@ -53,9 +48,9 @@ public class CompetitionController : ControllerBase
     }
 
     [HttpPatch("{id:Guid}")]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> ChangeMaxCompetitors(Guid id, [FromBody]ChangeMaxCompetitorsRequestDto dto)
     {
         await _competitionService.ChangeMaxCompetitors(id, dto.MaxCompetitors);
@@ -63,9 +58,9 @@ public class CompetitionController : ControllerBase
     }
 
     [HttpPost("{id:Guid}/Checkpoints")]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> AddCheckpoint(Guid id, [FromBody] AddCheckpointRequestDto dto)
     {
         await _competitionService.AddCheckpoint(id, dto);
@@ -73,9 +68,9 @@ public class CompetitionController : ControllerBase
     }
 
     [HttpDelete("{id:Guid}/Checkpoints/{checkpointId:Guid}")]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> RemoveCheckpoint(Guid id, Guid checkpointId)
     {
         await _competitionService.RemoveCheckpoint(id, checkpointId);

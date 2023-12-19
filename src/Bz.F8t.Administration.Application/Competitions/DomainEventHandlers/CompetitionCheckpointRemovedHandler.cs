@@ -6,18 +6,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Bz.F8t.Administration.Application.Competitions;
 
-internal class CompetitionCheckpointRemovedHandler : INotificationHandler<CompetitionCheckpointRemoved>
+internal class CompetitionCheckpointRemovedHandler(
+    ILogger<CompetitionCheckpointRemovedHandler> logger,
+    IPublishEndpoint publishEndpoint) : INotificationHandler<CompetitionCheckpointRemoved>
 {
-    private readonly ILogger<CompetitionCheckpointRemovedHandler> _logger;
-    private readonly IPublishEndpoint _publishEndpoint;
-
-    public CompetitionCheckpointRemovedHandler(
-        ILogger<CompetitionCheckpointRemovedHandler> logger,
-        IPublishEndpoint publishEndpoint)
-    {
-        _logger = logger;
-        _publishEndpoint = publishEndpoint;
-    }
+    private readonly ILogger<CompetitionCheckpointRemovedHandler> _logger = logger;
+    private readonly IPublishEndpoint _publishEndpoint = publishEndpoint;
 
     public async Task Handle(CompetitionCheckpointRemoved domainEvent, CancellationToken cancellationToken)
     {

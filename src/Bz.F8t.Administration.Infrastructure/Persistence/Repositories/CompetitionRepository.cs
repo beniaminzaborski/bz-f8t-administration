@@ -3,9 +3,6 @@ using Bz.F8t.Administration.Infrastructure.Persistence.Common;
 
 namespace Bz.F8t.Administration.Infrastructure.Persistence.Repositories;
 
-internal class CompetitionRepository : Repository<Competition, CompetitionId, ApplicationDbContext>, ICompetitionRepository
+internal class CompetitionRepository(ApplicationDbContext dbContext) : Repository<Competition, CompetitionId, ApplicationDbContext>(dbContext), ICompetitionRepository
 {
-    public CompetitionRepository(ApplicationDbContext dbContext) : base(dbContext)
-    {
-    }
 }

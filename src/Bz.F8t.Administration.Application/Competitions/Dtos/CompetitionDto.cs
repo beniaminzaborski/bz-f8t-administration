@@ -1,6 +1,6 @@
 ﻿namespace Bz.F8t.Administration.Application.Competitions;
 
-public record CompetitionDto
+public sealed record CompetitionDto
 {
     public Guid Id { get; init; }
     public DateTime StartAt { get; init; }

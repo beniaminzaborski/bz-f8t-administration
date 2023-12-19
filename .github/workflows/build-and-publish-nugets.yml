@@ -10,6 +10,7 @@ env:
   NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
   NUGET_DIRECTORY: ${{ github.workspace}}/nuget
   NUGET_FEED_URL: ${{ vars.NUGET_FEED_URL }}
+  DOTNET_VERSION: 8.0.x
 
 jobs:
   create_nuget:
@@ -20,6 +21,8 @@ jobs:
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - run: dotnet pack src/Shared/Bz.F8t.Administration.Messaging/Bz.F8t.Administration.Messaging.csproj --configuration Release --output ${{ env.NUGET_DIRECTORY }}
     

@@ -1,7 +1,6 @@
 ﻿using Bz.F8t.Administration.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using System.Security.AccessControl;
 
 namespace Bz.F8t.Administration.WebAPI.ExceptionsHandling;
 
@@ -32,11 +31,6 @@ internal class ErrorObjectResult : ObjectResult
                 break;
         }
 
-        var errorResponse = new ErrorResponseDto
-        {
-            Message = message
-        };
-
-        return new ErrorObjectResult(errorResponse, httpStatusCode);
+        return new ErrorObjectResult(new ErrorResponseDto(message), httpStatusCode);
     }
 }

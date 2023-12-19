@@ -16,7 +16,7 @@ This repository contains source code of Administration service. In the repo is a
 ## Technologies
 Project is created with:
 * C#
-* .NET 7
+* .NET 8
 * Entity Framework Core
 * PostgreSQL
 * Open Telemetry
