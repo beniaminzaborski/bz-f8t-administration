@@ -1,8 +1,6 @@
 ﻿using Bz.F8t.Administration.Application.Common;
 using FluentValidation;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 namespace Bz.F8t.Administration.Application;
 
@@ -10,13 +8,21 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection service)
     {
+        var applicationAssembly = typeof(Application.Common.IUnitOfWork).Assembly;
+        var domainAssembly = typeof(Domain.Common.IDomainEvent).Assembly;
+
         return service
-            .AddMediatR(c => c.RegisterServicesFromAssemblies(
-                typeof(Application.Common.IUnitOfWork).Assembly,
-                typeof(Domain.Common.IDomainEvent).Assembly))
+            .AddMediatR(c =>
+            { 
+                c.RegisterServicesFromAssemblies(
+                    applicationAssembly,
+                    domainAssembly);
+
+                c.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            })
             .AddApplicationServices()
-            .AddAutoMapper(Assembly.GetExecutingAssembly())
-            .AddValidators();
+            .AddAutoMapper(applicationAssembly)
+            .AddValidatorsFromAssembly(applicationAssembly);
     }
 
     private static IServiceCollection AddApplicationServices(this IServiceCollection services)
@@ -26,19 +32,5 @@ public static class DependencyInjection
             .AddClasses(classes => classes.AssignableTo<IApplicationService>())
             .AsMatchingInterface()
             .WithScopedLifetime());
-    }
-
-    private static IServiceCollection AddValidators(this IServiceCollection services)
-    {
-        //services
-        //    .AddScoped<IValidatorFactory, ValidatorFactory>();
-
-        services
-            .Scan(scan => scan.FromAssemblyOf<IApplicationService>()
-            .AddClasses(classes => classes.AssignableTo(typeof(IValidator<>)))
-            .AsImplementedInterfaces(i => i.Name.StartsWith("IValidator") && i.IsGenericType)
-            .WithScopedLifetime());
-
-        return services;
     }
 }

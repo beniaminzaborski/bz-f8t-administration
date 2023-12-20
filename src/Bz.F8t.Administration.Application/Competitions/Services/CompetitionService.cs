@@ -20,102 +20,102 @@ internal class CompetitionService(
     private readonly IValidator<CreateCompetitionDto> _createCompetitionDtoValidator = createCompetitionDtoValidator;
     private readonly IValidator<AddCheckpointRequestDto> _addCheckpointRequestDtoValidator = addCheckpointRequestDtoValidator;
 
-    public async Task<Guid> CreateCompetitionAsync(CreateCompetitionDto dto)
-    {
-        await _createCompetitionDtoValidator.ValidateAndThrowAsync(dto);
+    //public async Task<Guid> CreateCompetitionAsync(CreateCompetitionDto dto)
+    //{
+    //    await _createCompetitionDtoValidator.ValidateAndThrowAsync(dto);
 
-        try
-        {
-            var competition = new Competition(
-                CompetitionId.From(Guid.NewGuid()),
-                DistanceHelper.From(dto.Distance.Amount, dto.Distance.Unit),
-                dto.StartAt,
-                dto.MaxCompetitors,
-                new CompetitionPlace(dto.Place.City, new Geolocalization(dto.Place.Latitude, dto.Place.Longitute)));
+    //    try
+    //    {
+    //        var competition = new Competition(
+    //            CompetitionId.From(Guid.NewGuid()),
+    //            DistanceHelper.From(dto.Distance.Amount, dto.Distance.Unit),
+    //            dto.StartAt,
+    //            dto.MaxCompetitors,
+    //            new CompetitionPlace(dto.Place.City, new Geolocalization(dto.Place.Latitude, dto.Place.Longitute)));
 
-            await _competitionRepository.CreateAsync(competition);
-            await _unitOfWork.CommitAsync();
+    //        await _competitionRepository.CreateAsync(competition);
+    //        await _unitOfWork.CommitAsync();
 
-            return competition.Id.Value;
-        }
-        catch (CompetitionPlaceCityInvalidException)
-        {
-            throw new Common.Exceptions.ValidationException("City name must me not empty and lenght must be less than 100 characters");
-        }
-        catch (GeolocalizationLatitudeInvalidException)
-        {
-            throw new Common.Exceptions.ValidationException("Latitude must be between -90.0000000 and 90.0000000");
-        }
-        catch (GeolocalizationLongitudeInvalidException)
-        {
-            throw new Common.Exceptions.ValidationException("Longitude must be between -180.0000000 and 180.0000000");
-        }
-        catch (DistanceAmountInvalidException)
-        {
-            throw new Common.Exceptions.ValidationException("Distance amount is invalid");
-        }
-    }
+    //        return competition.Id.Value;
+    //    }
+    //    catch (CompetitionPlaceCityInvalidException)
+    //    {
+    //        throw new Common.Exceptions.ValidationException("City name must me not empty and lenght must be less than 100 characters");
+    //    }
+    //    catch (GeolocalizationLatitudeInvalidException)
+    //    {
+    //        throw new Common.Exceptions.ValidationException("Latitude must be between -90.0000000 and 90.0000000");
+    //    }
+    //    catch (GeolocalizationLongitudeInvalidException)
+    //    {
+    //        throw new Common.Exceptions.ValidationException("Longitude must be between -180.0000000 and 180.0000000");
+    //    }
+    //    catch (DistanceAmountInvalidException)
+    //    {
+    //        throw new Common.Exceptions.ValidationException("Distance amount is invalid");
+    //    }
+    //}
 
-    public async Task<CompetitionDto> GetCompetitionAsync(Guid id)
-    {
-        var competition = await _competitionRepository.GetAsync(CompetitionId.From(id), i => i.Checkpoints);
-        if (competition is null) throw new NotFoundException();
-        return _mapper.Map<CompetitionDto>(competition);
-    }
+    //public async Task<CompetitionDto> GetCompetitionAsync(Guid id)
+    //{
+    //    var competition = await _competitionRepository.GetAsync(CompetitionId.From(id), i => i.Checkpoints);
+    //    if (competition is null) throw new NotFoundException();
+    //    return _mapper.Map<CompetitionDto>(competition);
+    //}
 
-    public async Task OpenRegistrationAsync(Guid id)
-    {
-        var competition = await _competitionRepository.GetAsync(CompetitionId.From(id), i => i.Checkpoints);
-        if (competition is null) throw new NotFoundException();
+    //public async Task OpenRegistrationAsync(Guid id)
+    //{
+    //    var competition = await _competitionRepository.GetAsync(CompetitionId.From(id), i => i.Checkpoints);
+    //    if (competition is null) throw new NotFoundException();
 
-        try
-        {
-            competition.OpenRegistration();
-        }
-        catch (CannotOpenRegistrationException)
-        {
-            throw new Common.Exceptions.ValidationException("Cannot open registration");
-        }
+    //    try
+    //    {
+    //        competition.OpenRegistration();
+    //    }
+    //    catch (CannotOpenRegistrationException)
+    //    {
+    //        throw new Common.Exceptions.ValidationException("Cannot open registration");
+    //    }
 
-        await _competitionRepository.UpdateAsync(competition);
-        await _unitOfWork.CommitAsync();
-    }
+    //    await _competitionRepository.UpdateAsync(competition);
+    //    await _unitOfWork.CommitAsync();
+    //}
 
-    public async Task CompleteRegistrationAsync(Guid id)
-    {
-        var competition = await _competitionRepository.GetAsync(CompetitionId.From(id), i => i.Checkpoints);
-        if (competition is null) throw new NotFoundException();
+    //public async Task CompleteRegistrationAsync(Guid id)
+    //{
+    //    var competition = await _competitionRepository.GetAsync(CompetitionId.From(id), i => i.Checkpoints);
+    //    if (competition is null) throw new NotFoundException();
 
-        try
-        {
-            competition.CompleteRegistration();
-        }
-        catch (CannotCompleteRegistrationException)
-        {
-            throw new Common.Exceptions.ValidationException("Cannot complete registration");
-        }
+    //    try
+    //    {
+    //        competition.CompleteRegistration();
+    //    }
+    //    catch (CannotCompleteRegistrationException)
+    //    {
+    //        throw new Common.Exceptions.ValidationException("Cannot complete registration");
+    //    }
 
-        await _competitionRepository.UpdateAsync(competition);
-        await _unitOfWork.CommitAsync();
-    }
+    //    await _competitionRepository.UpdateAsync(competition);
+    //    await _unitOfWork.CommitAsync();
+    //}
 
-    public async Task ChangeMaxCompetitors(Guid id, int maxCompetitors)
-    {
-        var competition = await _competitionRepository.GetAsync(CompetitionId.From(id));
-        if (competition is null) throw new NotFoundException();
+    //public async Task ChangeMaxCompetitors(Guid id, int maxCompetitors)
+    //{
+    //    var competition = await _competitionRepository.GetAsync(CompetitionId.From(id));
+    //    if (competition is null) throw new NotFoundException();
 
-        try
-        {
-            competition.ChangeMaxCompetitors(maxCompetitors);
-        }
-        catch (CompetitionMaxCompetitorsChangeNotAllowedException)
-        {
-            throw new Common.Exceptions.ValidationException("Changing maximum numbers of competitors is not allowed");
-        }
+    //    try
+    //    {
+    //        competition.ChangeMaxCompetitors(maxCompetitors);
+    //    }
+    //    catch (CompetitionMaxCompetitorsChangeNotAllowedException)
+    //    {
+    //        throw new Common.Exceptions.ValidationException("Changing maximum numbers of competitors is not allowed");
+    //    }
 
-        await _competitionRepository.UpdateAsync(competition);
-        await _unitOfWork.CommitAsync();
-    }
+    //    await _competitionRepository.UpdateAsync(competition);
+    //    await _unitOfWork.CommitAsync();
+    //}
 
     public async Task AddCheckpoint(Guid competitionId, AddCheckpointRequestDto checkpointDto)
     {
