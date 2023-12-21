@@ -19,7 +19,10 @@ internal class ErrorObjectResult : ObjectResult
 
         switch (exception)
         {
-            case ValidationException:
+            case ValidationException vex:
+                httpStatusCode = (int)HttpStatusCode.BadRequest;
+                message = string.Join(". ", vex.ValidationErrors.Select(x => $"{x.PropertyName}: {x.ErrorMessage}").ToArray());
+                break;
             case FluentValidation.ValidationException:
                 httpStatusCode = (int)HttpStatusCode.BadRequest;
                 break;

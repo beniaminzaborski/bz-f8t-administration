@@ -32,7 +32,7 @@ internal class CreateCompetitionCommandHandler(
         }
         catch (CompetitionPlaceCityInvalidException)
         {
-            throw new Common.Exceptions.ValidationException("City name must me not empty and lenght must be less than 100 characters");
+            throw new Common.Exceptions.ValidationException("City name", "Must me not empty and lenght must be less than 100 characters");
         }
         catch (GeolocalizationLatitudeInvalidException)
         {

@@ -11,12 +11,10 @@ namespace Bz.F8t.Administration.WebAPI.Controllers;
 [ApiController]
 public class CompetitionController(
     IMediator mediator,
-    IMapper mapper,
-    ICompetitionService competitionService) : ControllerBase
+    IMapper mapper) : ControllerBase
 {
     private readonly IMediator _mediator = mediator;
     private readonly IMapper _mapper = mapper;
-    private readonly ICompetitionService _competitionService = competitionService;
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -76,8 +74,8 @@ public class CompetitionController(
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> AddCheckpoint(Guid id, [FromBody] AddCheckpointRequestDto dto)
     {
-        // TODO: Refactor to command
-        await _competitionService.AddCheckpoint(id, dto);
+        var command = new AddCheckpointRequestCommand(id, dto.TrackPointAmount, dto.TrackPointUnit);
+        await _mediator.Send(command);
         return NoContent();
     }
 
@@ -87,8 +85,8 @@ public class CompetitionController(
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> RemoveCheckpoint(Guid id, Guid checkpointId)
     {
-        // TODO: Refactor to command
-        await _competitionService.RemoveCheckpoint(id, checkpointId);
+        var command = new RemoveCheckpointCommand(id, checkpointId);
+        await _mediator.Send(command);
         return NoContent();
     }
 }
