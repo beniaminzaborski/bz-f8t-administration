@@ -1,10 +1,11 @@
-﻿using FluentValidation;
+﻿using Bz.F8t.Administration.Application.Competitions.Commands;
+using FluentValidation;
 
 namespace Bz.F8t.Administration.Application.Competitions;
 
-public class CreateCompetitionDtoValidator : AbstractValidator<CreateCompetitionDto>
+public class CreateCompetitionCommandValidator : AbstractValidator<CreateCompetitionCommand>
 {
-    public CreateCompetitionDtoValidator(
+    public CreateCompetitionCommandValidator(
         IValidator<DistanceDto> distanceValidator,
         IValidator<CompetitionPlaceDto> placeValidator)
     {

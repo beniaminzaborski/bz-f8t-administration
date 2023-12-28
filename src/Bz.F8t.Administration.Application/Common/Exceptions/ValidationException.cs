@@ -2,9 +2,25 @@
 
 public class ValidationException : Exception
 {
-    public ValidationException() { }
+    public IEnumerable<ValidationError> ValidationErrors { get; }
 
-    public ValidationException(string message) : base(message) { }
+    public ValidationException(IEnumerable<ValidationError> validationErrors) 
+    { 
+        ValidationErrors = validationErrors;
+    }
 
-    public ValidationException(string message, Exception inner) : base(message, inner) { }
+    public ValidationException(ValidationError validationError)
+    {
+        ValidationErrors = new[] { validationError };
+    }
+
+    public ValidationException(string propertyName, string validationErrorMessage)
+    {
+        ValidationErrors = new[] { new ValidationError(propertyName, validationErrorMessage) };
+    }
+
+    public ValidationException(string validationErrorMessage)
+    {
+        ValidationErrors = new[] { new ValidationError(string.Empty, validationErrorMessage) };
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Bz.F8t.Administration.Application.Competitions.Commands;
 using Bz.F8t.Administration.Domain.ManagingCompetition;
 
 namespace Bz.F8t.Administration.Application.Competitions;
@@ -22,5 +23,11 @@ internal class CompetitionMappings : Profile
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.Value))
             .ForMember(dest => dest.TrackPointAmount, opt => opt.MapFrom(src => src.TrackPoint.Amount))
             .ForMember(dest => dest.TrackPointUnit, opt => opt.MapFrom(src => src.TrackPoint.Unit.ToString()));
+
+        CreateMap<CreateCompetitionDto, CreateCompetitionCommand>()
+            .ForCtorParam(nameof(CreateCompetitionCommand.StartAt), opt => opt.MapFrom(src => src.StartAt))
+            .ForCtorParam(nameof(CreateCompetitionCommand.Distance), opt => opt.MapFrom(src => src.Distance))
+            .ForCtorParam(nameof(CreateCompetitionCommand.Place), opt => opt.MapFrom(src => src.Place))
+            .ForCtorParam(nameof(CreateCompetitionCommand.MaxCompetitors), opt => opt.MapFrom(src => src.MaxCompetitors));
     }
 }
