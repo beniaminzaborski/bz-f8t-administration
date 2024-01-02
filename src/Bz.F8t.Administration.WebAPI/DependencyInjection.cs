@@ -34,14 +34,14 @@ public static class DependencyInjection
                 .AddAspNetCoreInstrumentation()
                 .AddNpgsql()
                 .AddMassTransitInstrumentation().AddSource("MassTransit")
-                .AddConsoleExporter()
+                //.AddConsoleExporter()
                 .AddAzureMonitorTraceExporter(cfg => cfg.ConnectionString = appInsightsConnectionString))
             .WithMetrics(builder => builder
                 .AddMeter(serviceName)
                 .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName, serviceVersion: serviceVersion))
                 .AddRuntimeInstrumentation()
                 .AddAspNetCoreInstrumentation()
-                .AddConsoleExporter()
+                //.AddConsoleExporter()
                 .AddAzureMonitorMetricExporter(cfg => cfg.ConnectionString = appInsightsConnectionString))
             .Services;
     }
