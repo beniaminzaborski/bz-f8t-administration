@@ -11,6 +11,14 @@ var config = builder.Configuration;
 
 // Add services to the container.
 services
+    .AddCors(opts => 
+    {
+        opts.AddDefaultPolicy(
+            policy =>
+            {
+                policy.AllowAnyOrigin();
+            });
+    })
     .AddObservability(config, serviceName, serviceVersion)
     .AddApplication()
     .AddInfrastructure(config)
@@ -20,6 +28,7 @@ services
 
 var app = builder.Build();
 
+app.UseCors();
 
 if (app.Environment.IsDevelopment())
 {

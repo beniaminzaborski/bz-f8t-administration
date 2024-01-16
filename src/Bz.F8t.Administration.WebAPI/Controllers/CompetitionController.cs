@@ -25,6 +25,15 @@ public class CompetitionController(
         return CreatedAtAction(nameof(GetAsync), new { id }, null);
     }
 
+    [HttpGet]
+    [ProducesResponseType(typeof(CompetitionDto), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAllAsync()
+    {
+        var query = new GetCompetitionListQuery();
+        var result = await _mediator.Send(query);
+        return Ok(result);
+    }
+
     [HttpGet("{id:Guid}")]
     [ProducesResponseType(typeof(CompetitionDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
