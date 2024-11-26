@@ -23,9 +23,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\.script-build-service-docker-image-and-push-into-acr.yml = .github\workflows\.script-build-service-docker-image-and-push-into-acr.yml
 		.github\workflows\.script-deploy-service-into-aks.yml = .github\workflows\.script-deploy-service-into-aks.yml
-		.github\workflows\build-and-publish-nugets.yml = .github\workflows\build-and-publish-nugets.yml
-		.github\workflows\build-and-deploy-prod.yml = .github\workflows\build-and-deploy-prod.yml
 		.github\workflows\build-and-deploy-dev.yml = .github\workflows\build-and-deploy-dev.yml
+		.github\workflows\build-and-deploy-prod.yml = .github\workflows\build-and-deploy-prod.yml
+		.github\workflows\build-and-publish-nugets.yml = .github\workflows\build-and-publish-nugets.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{588476D4-9B9F-47C3-B7DE-91BB14FB8AC5}"
@@ -58,6 +58,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "diagrams", "diagrams", "{11
 		doc\diagrams\f8t_branches_environments.drawio = doc\diagrams\f8t_branches_environments.drawio
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bz.F8t.AppHost", "src\Bz.F8t.AppHost\Bz.F8t.AppHost.csproj", "{DE679601-C7D5-4EE4-ACD5-92F6F735BC01}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -88,6 +90,10 @@ Global
 		{D5A78708-D1CC-4515-836A-6E29BE05203A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5A78708-D1CC-4515-836A-6E29BE05203A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5A78708-D1CC-4515-836A-6E29BE05203A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE679601-C7D5-4EE4-ACD5-92F6F735BC01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE679601-C7D5-4EE4-ACD5-92F6F735BC01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE679601-C7D5-4EE4-ACD5-92F6F735BC01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE679601-C7D5-4EE4-ACD5-92F6F735BC01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -102,6 +108,7 @@ Global
 		{6199844C-9B68-4609-8F0E-B581536FBCB0} = {1C3C3228-CF7D-4CD0-8CC6-659109DF05FE}
 		{D5A78708-D1CC-4515-836A-6E29BE05203A} = {6199844C-9B68-4609-8F0E-B581536FBCB0}
 		{119F8B19-916E-4FA4-9BF5-D91A73BB0699} = {588476D4-9B9F-47C3-B7DE-91BB14FB8AC5}
+		{DE679601-C7D5-4EE4-ACD5-92F6F735BC01} = {1C3C3228-CF7D-4CD0-8CC6-659109DF05FE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {97F31DEE-3931-45EB-9080-33C0E8B6E949}
