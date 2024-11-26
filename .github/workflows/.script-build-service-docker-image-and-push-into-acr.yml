@@ -17,7 +17,7 @@ on:
 env:
   PROJECT_NAME: f8t
   SERVICE_NAME: admin
-  DOTNET_VERSION: 8.0.x
+  DOTNET_VERSION: 9.0.x
 
 jobs:
   build-service-docker-image-and-push-into-acr:

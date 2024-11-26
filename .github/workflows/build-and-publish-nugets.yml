@@ -10,7 +10,7 @@ env:
   NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
   NUGET_DIRECTORY: ${{ github.workspace}}/nuget
   NUGET_FEED_URL: ${{ vars.NUGET_FEED_URL }}
-  DOTNET_VERSION: 8.0.x
+  DOTNET_VERSION: 9.0.x
 
 jobs:
   create_nuget:
