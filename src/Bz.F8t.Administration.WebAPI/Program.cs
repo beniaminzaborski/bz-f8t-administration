@@ -16,7 +16,9 @@ services
         opts.AddDefaultPolicy(
             policy =>
             {
-                policy.AllowAnyOrigin();
+                policy.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
             });
     })
     .AddObservability(config, serviceName, serviceVersion)

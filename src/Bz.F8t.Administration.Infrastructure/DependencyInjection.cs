@@ -66,6 +66,7 @@ public static class DependencyInjection
         {
             x.SetKebabCaseEndpointNameFormatter();
 
+            // TODO: Use RabbitMQ here!
             x.UsingAzureServiceBus((context, cfg) =>
             {
                 cfg.Host(configuration.GetConnectionString("AzureServiceBus"));

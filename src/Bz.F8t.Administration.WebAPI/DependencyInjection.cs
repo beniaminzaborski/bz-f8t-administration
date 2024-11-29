@@ -2,9 +2,7 @@
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Metrics;
-using OpenTelemetry;
 using Npgsql;
-using Microsoft.Extensions.Configuration;
 using Azure.Monitor.OpenTelemetry.Exporter;
 
 namespace Bz.F8t.Administration.WebAPI;
@@ -24,8 +22,6 @@ public static class DependencyInjection
 
     public static IServiceCollection AddObservability(this IServiceCollection services, IConfiguration config, string serviceName, string serviceVersion)
     {
-        var appInsightsConnectionString = config.GetConnectionString("ApplicationInsights");
-
         return services
             .AddOpenTelemetry()
             .WithTracing(builder => builder
@@ -35,14 +31,42 @@ public static class DependencyInjection
                 .AddNpgsql()
                 .AddMassTransitInstrumentation().AddSource("MassTransit")
                 //.AddConsoleExporter()
-                .AddAzureMonitorTraceExporter(cfg => cfg.ConnectionString = appInsightsConnectionString))
+                .AddTraceExporter(config))
             .WithMetrics(builder => builder
                 .AddMeter(serviceName)
                 .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName, serviceVersion: serviceVersion))
                 .AddRuntimeInstrumentation()
                 .AddAspNetCoreInstrumentation()
                 //.AddConsoleExporter()
-                .AddAzureMonitorMetricExporter(cfg => cfg.ConnectionString = appInsightsConnectionString))
+                .AddMetricsExporter(config))
             .Services;
     }
+
+    private static TracerProviderBuilder AddTraceExporter(this TracerProviderBuilder tracerProviderBuilder, IConfiguration config)
+    {
+        var useJaeger = config.GetValue<bool>("Jaeger:UseJaeger");
+        if(useJaeger)
+        {
+            var jaegerEndpoint = config.GetValue<string>("Jaeger:Endpoint");
+            return tracerProviderBuilder.AddOtlpExporter(o =>
+            {
+                o.Endpoint = new Uri(jaegerEndpoint);
+            });
+        }
+        else
+        {
+            var appInsightsConnectionString = GetApplicationInsightsConnectionString(config);
+            return tracerProviderBuilder.AddAzureMonitorTraceExporter(cfg => cfg.ConnectionString = appInsightsConnectionString);
+        }
+    }
+
+    private static MeterProviderBuilder AddMetricsExporter(this MeterProviderBuilder meterProviderBuilder, IConfiguration config)
+    {
+        var appInsightsConnectionString = GetApplicationInsightsConnectionString(config);
+
+        // TODO: Use Prometheus exporter here!
+        return meterProviderBuilder.AddAzureMonitorMetricExporter(cfg => cfg.ConnectionString = appInsightsConnectionString);
+    }
+
+    private static string? GetApplicationInsightsConnectionString(IConfiguration config) => config.GetConnectionString("ApplicationInsights");
 }
