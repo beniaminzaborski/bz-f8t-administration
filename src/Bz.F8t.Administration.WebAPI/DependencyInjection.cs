@@ -48,10 +48,10 @@ public static class DependencyInjection
         if(useJaeger)
         {
             var jaegerEndpoint = config.GetValue<string>("Jaeger:Endpoint");
-            return tracerProviderBuilder.AddOtlpExporter(o =>
+            return tracerProviderBuilder.AddOtlpExporter(/*o =>
             {
                 o.Endpoint = new Uri(jaegerEndpoint);
-            });
+            }*/);
         }
         else
         {
@@ -65,7 +65,9 @@ public static class DependencyInjection
         var appInsightsConnectionString = GetApplicationInsightsConnectionString(config);
 
         // TODO: Use Prometheus exporter here!
-        return meterProviderBuilder.AddAzureMonitorMetricExporter(cfg => cfg.ConnectionString = appInsightsConnectionString);
+        return meterProviderBuilder
+            .AddOtlpExporter();
+            //.AddAzureMonitorMetricExporter(cfg => cfg.ConnectionString = appInsightsConnectionString);
     }
 
     private static string? GetApplicationInsightsConnectionString(IConfiguration config) => config.GetConnectionString("ApplicationInsights");
