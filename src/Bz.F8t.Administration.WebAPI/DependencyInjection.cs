@@ -44,14 +44,10 @@ public static class DependencyInjection
 
     private static TracerProviderBuilder AddTraceExporter(this TracerProviderBuilder tracerProviderBuilder, IConfiguration config)
     {
-        var useJaeger = config.GetValue<bool>("Jaeger:UseJaeger");
-        if(useJaeger)
+        var useOtlpExporter = config.GetValue<bool>("OpenTelemetry:UseOtlpExporter");
+        if(useOtlpExporter)
         {
-            var jaegerEndpoint = config.GetValue<string>("Jaeger:Endpoint");
-            return tracerProviderBuilder.AddOtlpExporter(/*o =>
-            {
-                o.Endpoint = new Uri(jaegerEndpoint);
-            }*/);
+            return tracerProviderBuilder.AddOtlpExporter();
         }
         else
         {
@@ -62,12 +58,16 @@ public static class DependencyInjection
 
     private static MeterProviderBuilder AddMetricsExporter(this MeterProviderBuilder meterProviderBuilder, IConfiguration config)
     {
-        var appInsightsConnectionString = GetApplicationInsightsConnectionString(config);
-
-        // TODO: Use Prometheus exporter here!
-        return meterProviderBuilder
-            .AddOtlpExporter();
-            //.AddAzureMonitorMetricExporter(cfg => cfg.ConnectionString = appInsightsConnectionString);
+        var useOtlpExporter = config.GetValue<bool>("OpenTelemetry:UseOtlpExporter");
+        if (useOtlpExporter)
+        {
+            return meterProviderBuilder.AddOtlpExporter();
+        }
+        else
+        {
+            var appInsightsConnectionString = GetApplicationInsightsConnectionString(config);
+            return meterProviderBuilder.AddAzureMonitorMetricExporter(cfg => cfg.ConnectionString = appInsightsConnectionString);
+        }
     }
 
     private static string? GetApplicationInsightsConnectionString(IConfiguration config) => config.GetConnectionString("ApplicationInsights");
