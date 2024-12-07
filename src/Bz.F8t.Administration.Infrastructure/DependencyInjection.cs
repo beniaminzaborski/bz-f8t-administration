@@ -60,21 +60,32 @@ public static class DependencyInjection
 
     private static IServiceCollection AddMessageBus(this IServiceCollection services, IConfiguration configuration)
     {
+        var useRabbitMq = configuration.GetValue<bool>("MessageBus:UseRabbitMq"); ;
+
         return services
             .AddSingleton<IEntityNameFormatter, ShortTypeEntityNameFormatter>()
             .AddMassTransit(x =>
         {
             x.SetKebabCaseEndpointNameFormatter();
 
-            // TODO: Use RabbitMQ here!
-            x.UsingAzureServiceBus((context, cfg) =>
+            if (useRabbitMq)
             {
-                cfg.Host(configuration.GetConnectionString("AzureServiceBus"));
-
-                cfg.ConfigureEndpoints(context);
-
-                cfg.MessageTopology.SetEntityNameFormatter(context.GetRequiredService<IEntityNameFormatter>());
-            });
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host(configuration.GetConnectionString("RabbitMQ"));
+                    cfg.ConfigureEndpoints(context);
+                    cfg.MessageTopology.SetEntityNameFormatter(context.GetRequiredService<IEntityNameFormatter>());
+                });
+            }
+            else
+            {
+                x.UsingAzureServiceBus((context, cfg) =>
+                {
+                    cfg.Host(configuration.GetConnectionString("AzureServiceBus"));
+                    cfg.ConfigureEndpoints(context);
+                    cfg.MessageTopology.SetEntityNameFormatter(context.GetRequiredService<IEntityNameFormatter>());
+                });
+            }
         });
     }
 }
