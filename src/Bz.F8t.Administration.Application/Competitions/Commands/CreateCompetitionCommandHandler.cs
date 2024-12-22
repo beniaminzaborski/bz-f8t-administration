@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using Bz.F8t.Administration.Application.Common;
+﻿using Bz.F8t.Administration.Application.Common;
 using Bz.F8t.Administration.Domain.ManagingCompetition;
 using Bz.F8t.Administration.Domain.Utils;
-using FluentValidation;
 using MediatR;
 
 namespace Bz.F8t.Administration.Application.Competitions.Commands;

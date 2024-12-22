@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Bz.F8t.Administration.Application.Competitions;
+﻿using Bz.F8t.Administration.Application.Competitions;
 using Bz.F8t.Administration.Application.Competitions.Commands;
 using Bz.F8t.Administration.Application.Competitions.Queries;
 using MediatR;
@@ -10,17 +9,15 @@ namespace Bz.F8t.Administration.WebAPI.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class CompetitionController(
-    IMediator mediator,
-    IMapper mapper) : ControllerBase
+    IMediator mediator) : ControllerBase
 {
     private readonly IMediator _mediator = mediator;
-    private readonly IMapper _mapper = mapper;
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> CreateAsync([FromBody]CreateCompetitionDto dto)
     {
-        var command = _mapper.Map<CreateCompetitionCommand>(dto);
+        var command = new CreateCompetitionCommand(dto.StartAt, dto.Distance, dto.Place, dto.MaxCompetitors);
         var id = await _mediator.Send(command);
         return CreatedAtAction(nameof(GetAsync), new { id }, null);
     }

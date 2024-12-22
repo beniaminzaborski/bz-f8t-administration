@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Bz.F8t.Administration.Messaging;
+﻿using Bz.F8t.Administration.Messaging;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -9,12 +8,10 @@ namespace Bz.F8t.Administration.Application.Competitions;
 
 public class CompetitionOpenedForRegistrationHandler(
     ILogger<CompetitionOpenedForRegistrationHandler> logger,
-    IPublishEndpoint publishEndpoint,
-    IMapper mapper) : INotificationHandler<CompetitionOpenedForRegistration>
+    IPublishEndpoint publishEndpoint) : INotificationHandler<CompetitionOpenedForRegistration>
 {
     private readonly ILogger<CompetitionOpenedForRegistrationHandler> _logger = logger;
     private readonly IPublishEndpoint _publishEndpoint = publishEndpoint;
-    private readonly IMapper _mapper = mapper;
 
     public async Task Handle(CompetitionOpenedForRegistration domainEvent, CancellationToken cancellationToken)
     {

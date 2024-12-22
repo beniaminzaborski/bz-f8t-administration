@@ -21,7 +21,6 @@ public static class DependencyInjection
                 c.AddOpenBehavior(typeof(ValidationBehavior<,>));
             })
             .AddApplicationServices()
-            .AddAutoMapper(applicationAssembly)
             .AddValidatorsFromAssembly(applicationAssembly);
     }
 
