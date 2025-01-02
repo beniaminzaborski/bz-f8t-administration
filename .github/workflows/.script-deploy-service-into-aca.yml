@@ -47,6 +47,11 @@ jobs:
           type=semver,pattern={{version}}
           type=raw,value={{sha}},enable=${{ github.ref_type != 'tag' }}
 
+    - name: Dump image tags
+      env:
+        IMAGE_TAGS: ${{ steps.metadata.outputs.tags }}
+      run: echo "$IMAGE_TAGS"
+
     # Create the new revision in Azure Container App
     - name: Deploy to Azure Contaner App
-      run: az containerapp update --name ca-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }} --resource-group rg-${{ env.PROJECT_NAME }}-nonprod-${{ inputs.AZURE_REGION_SHORT_NAME }} --image ${{ steps.metadata.outputs.tags[0] }}
+      run: az containerapp update --name ca-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }} --resource-group rg-${{ env.PROJECT_NAME }}-nonprod-${{ inputs.AZURE_REGION_SHORT_NAME }} --image ${{ steps.metadata.outputs.tags }}
