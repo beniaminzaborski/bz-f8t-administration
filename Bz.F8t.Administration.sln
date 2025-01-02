@@ -25,6 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\.script-deploy-service-into-aks.yml = .github\workflows\.script-deploy-service-into-aks.yml
 		.github\workflows\build-and-deploy-dev.yml = .github\workflows\build-and-deploy-dev.yml
 		.github\workflows\build-and-deploy-prod.yml = .github\workflows\build-and-deploy-prod.yml
+		.github\workflows\build-and-deploy-to-ca-dev.yml = .github\workflows\build-and-deploy-to-ca-dev.yml
 		.github\workflows\build-and-publish-nugets.yml = .github\workflows\build-and-publish-nugets.yml
 	EndProjectSection
 EndProject
