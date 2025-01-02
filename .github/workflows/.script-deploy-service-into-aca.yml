@@ -47,12 +47,18 @@ jobs:
           type=semver,pattern={{version}}
           type=raw,value={{sha}},enable=${{ github.ref_type != 'tag' }}
 
-    # Create the new revision in Azure Container App for non-prod
-    - name: Deploy to Azure Contaner App
-      if: ${{ inputs.ENVIRONMENT_TYPE != 'uat' && inputs.ENVIRONMENT_TYPE != 'prod' }}
-      run: az containerapp update --name ca-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }} --resource-group rg-${{ env.PROJECT_NAME }}-nonprod-${{ inputs.AZURE_REGION_SHORT_NAME }} --image ${{ steps.metadata.outputs.tags }}
+    # Create the new revision in Azure Container App
+    - name: Deploy to Azure Container App
+      run: |
+        # Determine resource group name depending on environment
+        if [[ "${{ inputs.ENVIRONMENT_TYPE }}" == "uat" || "${{ inputs.ENVIRONMENT_TYPE }}" == "prod" ]]; then
+        RG="rg-${{ env.PROJECT_NAME }}-prod-${{ inputs.AZURE_REGION_SHORT_NAME }}"
+        else
+        RG="rg-${{ env.PROJECT_NAME }}-nonprod-${{ inputs.AZURE_REGION_SHORT_NAME }}"
+        fi
 
-    # Create the new revision in Azure Container App for prod
-    - name: Deploy to Azure Contaner App
-      if: ${{ inputs.ENVIRONMENT_TYPE == 'uat' || inputs.ENVIRONMENT_TYPE == 'prod' }}
-      run: az containerapp update --name ca-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }} --resource-group rg-${{ env.PROJECT_NAME }}-prod-${{ inputs.AZURE_REGION_SHORT_NAME }} --image ${{ steps.metadata.outputs.tags }}
+        # Perform the deployment
+        az containerapp update \
+        --name ca-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }} \
+        --resource-group "$RG" \
+        --image "${{ steps.metadata.outputs.tags }}"
