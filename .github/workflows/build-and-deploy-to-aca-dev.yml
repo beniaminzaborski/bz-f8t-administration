@@ -22,14 +22,14 @@ jobs:
       REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
 
-  # deploy-service-in-dev:
-  #   uses: ./.github/workflows/.script-deploy-service-into-aks.yml
-  #   needs: build-service-in-dev
-  #   with:
-  #     ENVIRONMENT_TYPE: dev
-  #     AZURE_REGION_SHORT_NAME: ${{ vars.AZURE_REGION_SHORT_NAME }}
-  #   secrets:
-  #     AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-  #     REGISTRY_LOGIN_SERVER: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-  #     REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
-  #     REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+  deploy-service-in-dev:
+    uses: ./.github/workflows/.script-deploy-service-into-aca.yml
+    needs: build-service-in-dev
+    with:
+      ENVIRONMENT_TYPE: dev
+      AZURE_REGION_SHORT_NAME: ${{ vars.AZURE_REGION_SHORT_NAME }}
+    secrets:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      REGISTRY_LOGIN_SERVER: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}

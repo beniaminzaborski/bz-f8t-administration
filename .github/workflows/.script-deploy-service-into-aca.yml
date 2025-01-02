@@ -1,0 +1,52 @@
+on:
+  workflow_call: 
+    inputs:
+      ENVIRONMENT_TYPE:
+        required: true
+        type: string
+      AZURE_REGION_SHORT_NAME:
+        required: true
+        type: string
+    secrets:
+      AZURE_CREDENTIALS:
+        required: true
+      REGISTRY_LOGIN_SERVER:
+        required: true
+      REGISTRY_USERNAME:
+        required: true
+      REGISTRY_PASSWORD:
+        required: true
+
+env:
+  PROJECT_NAME: f8t
+  SERVICE_NAME: admin
+
+jobs:
+  deploy-service-into-aca:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.ENVIRONMENT_TYPE }}
+    steps:
+    # Log in to Azure
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    # Determine a docker image version (as docker image tag) depends on how the workflow has been triggered
+    # For trigger by push a commit then docker image tag is github sha
+    # For trigger by git tag (v{major.minor.fix}) then docker image tag is {major.minor.fix}
+    # This step sets these tags as a step output: steps.metadata.outputs.tags
+    - name: Determine Docker image metadata
+      id: metadata
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/bz-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}
+        flavor: |
+          latest=false
+        tags: |
+          type=semver,pattern={{version}}
+          type=raw,value={{sha}},enable=${{ github.ref_type != 'tag' }}
+
+    # Create the new revision in Azure Container App
+    - name: Deploy to Azure Contaner App
+      run: az containerapp update --name ca-${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }}-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.AZURE_REGION_SHORT_NAME }} --resource-group rg-${{ env.PROJECT_NAME }}-nonprod-${{ inputs.AZURE_REGION_SHORT_NAME }} --image ${{ steps.metadata.outputs.tags[0] }}
