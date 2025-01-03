@@ -9,6 +9,10 @@ public class CreateCompetitionCommandValidator : AbstractValidator<CreateCompeti
         IValidator<DistanceDto> distanceValidator,
         IValidator<CompetitionPlaceDto> placeValidator)
     {
+        RuleFor(x => x.Name)
+            .NotNull().WithMessage("Field is required")
+            .MaximumLength(250).WithMessage("Max lenght is 250 characters");
+
         RuleFor(x => x.StartAt)
           .GreaterThanOrEqualTo(DateTime.UtcNow).WithMessage("Cannot be in the past");
 

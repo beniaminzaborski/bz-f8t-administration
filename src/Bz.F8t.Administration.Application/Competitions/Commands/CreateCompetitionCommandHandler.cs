@@ -18,6 +18,7 @@ internal class CreateCompetitionCommandHandler(
         {
             var competition = new Competition(
                 CompetitionId.From(Guid.NewGuid()),
+                request.Name,
                 DistanceHelper.From(request.Distance.Amount, request.Distance.Unit),
                 request.StartAt,
                 request.MaxCompetitors,

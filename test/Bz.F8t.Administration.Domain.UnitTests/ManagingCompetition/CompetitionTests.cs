@@ -11,6 +11,7 @@ public class CompetitionTests
         // Arrange & Act
         var competition = new Competition(
           CompetitionId.From(new Guid("0c33c4ad-bbd3-4c94-acac-ab1907146834")),
+          "Test Marathon 2025",
           DistanceHelper.Marathon(),
           new DateTime(2032, 02, 08, 10, 00, 00),
           8000,
@@ -26,6 +27,7 @@ public class CompetitionTests
         // Arrange & Act
         var competition = new Competition(
           CompetitionId.From(new Guid("0c33c4ad-bbd3-4c94-acac-ab1907146834")),
+          "Test Marathon 2025",
           DistanceHelper.Marathon(),
           new DateTime(2032, 02, 08, 10, 00, 00),
           8000,
@@ -50,6 +52,7 @@ public class CompetitionTests
         // Arrange
         var competition = new Competition(
            CompetitionId.From(new Guid("0c33c4ad-bbd3-4c94-acac-ab1907146834")),
+           "Test Marathon 2025",
            DistanceHelper.Marathon(),
            new DateTime(2032, 02, 08, 10, 00, 00),
            8000,
@@ -69,6 +72,7 @@ public class CompetitionTests
         // Arrange
         var competition = new Competition(
            CompetitionId.From(new Guid("0c33c4ad-bbd3-4c94-acac-ab1907146834")),
+           "Test Marathon 2025",
            DistanceHelper.Marathon(),
            new DateTime(2032, 02, 08, 10, 00, 00),
            8000,
@@ -88,6 +92,7 @@ public class CompetitionTests
         // Arrange
         var competition = new Competition(
            CompetitionId.From(new Guid("0c33c4ad-bbd3-4c94-acac-ab1907146834")),
+           "Test Marathon 2025",
            DistanceHelper.Marathon(),
            new DateTime(2032, 02, 08, 10, 00, 00),
            8000,
@@ -108,6 +113,7 @@ public class CompetitionTests
         // Arrange
         var competition = new Competition(
            CompetitionId.From(new Guid("0c33c4ad-bbd3-4c94-acac-ab1907146834")),
+           "Test Marathon 2025",
            DistanceHelper.Marathon(),
            new DateTime(2032, 02, 08, 10, 00, 00),
            8000,
@@ -128,6 +134,7 @@ public class CompetitionTests
         // Arrange
         var competition = new Competition(
            CompetitionId.From(new Guid("0c33c4ad-bbd3-4c94-acac-ab1907146834")),
+           "Test Marathon 2025",
            DistanceHelper.Marathon(),
            new DateTime(2032, 02, 08, 10, 00, 00),
            8000,
@@ -148,6 +155,7 @@ public class CompetitionTests
         // Arrange
         var competition = new Competition(
            CompetitionId.From(new Guid("0c33c4ad-bbd3-4c94-acac-ab1907146834")),
+           "Test Marathon 2025",
            DistanceHelper.Marathon(),
            new DateTime(2032, 02, 08, 10, 00, 00),
            8000,
@@ -169,6 +177,7 @@ public class CompetitionTests
         // Arrange
         var competition = new Competition(
            CompetitionId.From(new Guid("0c33c4ad-bbd3-4c94-acac-ab1907146834")),
+           "Test Marathon 2025",
            DistanceHelper.Marathon(),
            new DateTime(2032, 02, 08, 10, 00, 00),
            8000,
@@ -189,6 +198,7 @@ public class CompetitionTests
         // Arrange
         var competition = new Competition(
            CompetitionId.From(new Guid("0c33c4ad-bbd3-4c94-acac-ab1907146834")),
+           "Test Marathon 2025",
            DistanceHelper.Marathon(),
            new DateTime(2032, 02, 08, 10, 00, 00),
            8000,
@@ -209,6 +219,7 @@ public class CompetitionTests
         // Arrange
         var competition = new Competition(
            CompetitionId.From(new Guid("0c33c4ad-bbd3-4c94-acac-ab1907146834")),
+           "Test Marathon 2025",
            DistanceHelper.Marathon(),
            new DateTime(2032, 02, 08, 10, 00, 00),
            8000,
@@ -227,6 +238,7 @@ public class CompetitionTests
         // Arrange
         var competition = new Competition(
            CompetitionId.From(new Guid("0c33c4ad-bbd3-4c94-acac-ab1907146834")),
+           "Test Marathon 2025",
            DistanceHelper.Marathon(),
            new DateTime(2032, 02, 08, 10, 00, 00),
            8000,
@@ -247,6 +259,7 @@ public class CompetitionTests
         // Arrange
         var competition = new Competition(
            CompetitionId.From(new Guid("0c33c4ad-bbd3-4c94-acac-ab1907146834")),
+           "Test Marathon 2025",
            DistanceHelper.Marathon(),
            new DateTime(2032, 02, 08, 10, 00, 00),
            8000,
@@ -265,6 +278,7 @@ public class CompetitionTests
         // Arrange
         var competition = new Competition(
            CompetitionId.From(new Guid("0c33c4ad-bbd3-4c94-acac-ab1907146834")),
+           "Test Marathon 2025",
            DistanceHelper.Marathon(),
            new DateTime(2032, 02, 08, 10, 00, 00),
            8000,

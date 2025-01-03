@@ -5,6 +5,7 @@ namespace Bz.F8t.Administration.Application.Competitions;
 public sealed record CompetitionDto
 {
     public Guid Id { get; init; }
+    public string Name { get; init; }
     public DateTime StartAt { get; init; }
     public DistanceDto Distance { get; init; }
     public CompetitionPlaceDto Place { get; init; }
@@ -17,6 +18,7 @@ public sealed record CompetitionDto
         return new CompetitionDto
         {
             Id = competition.Id.Value,
+            Name = competition.Name,
             StartAt = competition.StartAt,
             Distance = DistanceDto.FromDistance(competition.Distance),
             Place = CompetitionPlaceDto.FromCompetitionPlace(competition.Place),

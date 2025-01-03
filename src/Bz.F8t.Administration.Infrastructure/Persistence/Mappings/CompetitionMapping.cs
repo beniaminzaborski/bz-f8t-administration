@@ -15,6 +15,9 @@ internal class CompetitionMapping : IEntityTypeConfiguration<Competition>
             .HasColumnName("id")
             .HasConversion(entityId => entityId.Value, dbId => new CompetitionId(dbId));
 
+        builder.Property(e => e.Name)
+            .HasColumnName("name");
+
         builder.OwnsOne(e => e.Distance,
             navigationBuilder => 
             {

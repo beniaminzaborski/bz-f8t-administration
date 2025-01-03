@@ -17,7 +17,7 @@ public class CompetitionController(
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> CreateAsync([FromBody]CreateCompetitionDto dto)
     {
-        var command = new CreateCompetitionCommand(dto.StartAt, dto.Distance, dto.Place, dto.MaxCompetitors);
+        var command = new CreateCompetitionCommand(dto.Name, dto.StartAt, dto.Distance, dto.Place, dto.MaxCompetitors);
         var id = await _mediator.Send(command);
         return CreatedAtAction(nameof(GetAsync), new { id }, null);
     }

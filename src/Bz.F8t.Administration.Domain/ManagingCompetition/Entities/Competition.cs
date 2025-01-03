@@ -8,6 +8,7 @@ public class Competition : Entity<CompetitionId>, IAggregateRoot
 
     public Competition(
         CompetitionId id,
+        string name,
         Distance dictance,
         DateTime startAt,
         int maxCompetitors,
@@ -16,6 +17,7 @@ public class Competition : Entity<CompetitionId>, IAggregateRoot
         if (maxCompetitors <= 0) throw new ArgumentException("Numbers of maximum competitors must be greater than 0", nameof(maxCompetitors));
 
         Id = id;
+        Name = name;
         Distance = dictance;
         StartAt = startAt;
         MaxCompetitors = maxCompetitors;
@@ -25,6 +27,8 @@ public class Competition : Entity<CompetitionId>, IAggregateRoot
         AddCheckpoint(CreateStartLineCheckpoint());
         AddCheckpoint(CreateFinishLineCheckpoint());
     }
+
+    public string Name { get; private set; }
 
     public Distance Distance { get; private set; }
 

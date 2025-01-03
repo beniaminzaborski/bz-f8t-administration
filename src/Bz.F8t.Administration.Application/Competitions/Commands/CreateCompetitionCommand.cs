@@ -4,6 +4,7 @@ using MediatR;
 namespace Bz.F8t.Administration.Application.Competitions.Commands;
 
 public sealed record CreateCompetitionCommand(
+    string Name,
     DateTime StartAt,
     DistanceDto Distance,
     CompetitionPlaceDto Place,
