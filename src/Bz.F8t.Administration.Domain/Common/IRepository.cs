@@ -7,6 +7,8 @@ public interface IRepository<TEntity, TId>
 {
     Task<TId> CreateAsync(TEntity entity);
 
+    Task<IEnumerable<TEntity>> GetFilteredAsync(Expression<Func<TEntity, bool>> filter, params Expression<Func<TEntity, object>>[] includes);
+
     Task<IEnumerable<TEntity>> GetAllAsync(params Expression<Func<TEntity, object>>[] includes);
 
     Task<TEntity?> GetAsync(TId id, params Expression<Func<TEntity, object>>[] includes);

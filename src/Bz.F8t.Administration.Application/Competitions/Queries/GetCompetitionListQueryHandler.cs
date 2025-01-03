@@ -10,7 +10,9 @@ internal class GetCompetitionListQueryHandler(
 
     public async Task<IEnumerable<CompetitionDto>> Handle(GetCompetitionListQuery request, CancellationToken cancellationToken)
     {
-        var competitions = await _competitionRepository.GetAllAsync(i => i.Checkpoints);
+        var competitions = !string.IsNullOrEmpty(request.Search) 
+            ? await _competitionRepository.GetFilteredAsync(i => i.Name.ToLower().Contains(request.Search.ToLower()))
+            : await _competitionRepository.GetAllAsync(i => i.Checkpoints);
         return competitions.Select(c => CompetitionDto.FromCompetition(c)).ToList();
     }
 }

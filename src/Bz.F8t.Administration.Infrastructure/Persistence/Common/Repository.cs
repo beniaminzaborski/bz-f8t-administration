@@ -32,6 +32,16 @@ internal abstract class Repository<TEntity, TId, TDbContext> : IRepository<TEnti
         _dbContext.Set<TEntity>().Remove(entity);
     }
 
+    public async Task<IEnumerable<TEntity>> GetFilteredAsync(Expression<Func<TEntity, bool>> filter, params Expression<Func<TEntity, object>>[] includes)
+    {
+        var query = _dbContext.Set<TEntity>().AsQueryable();
+        query = query.Where(filter);
+
+        query = includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+
+        return await query.ToListAsync();
+    }
+
     public async Task<IEnumerable<TEntity>> GetAllAsync(params Expression<Func<TEntity, object>>[] includes)
     {
         var query = _dbContext.Set<TEntity>().AsQueryable();

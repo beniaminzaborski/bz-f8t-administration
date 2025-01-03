@@ -7,7 +7,7 @@ public class _202501031334_AlterTable_Competition_AddColumn_Name : Migration
 {
     public override void Down()
     {
-        throw new NotImplementedException();
+        Delete.Column("name").FromTable("competitions");
     }
 
     public override void Up()
